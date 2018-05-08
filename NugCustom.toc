@@ -1,0 +1,14 @@
+## Interface: 70300
+## Title: NugCustom
+## Author: d87
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibSharedMedia-3.0\lib.xml
+
+
+Bindings.xml
+BindingsTable.lua
+CVars.lua
+NugCustom.lua
+Profiling.lua
