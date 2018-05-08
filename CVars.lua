@@ -80,7 +80,7 @@ local cvars = {
 	nameplateMotion              = "0", -- 1 =  Stacking, 0 = Overlapping
 	-- nameplateOtherBottomInset    = "-1", -- don't stick nameplates to the screen edges for offscreen mobs
 	-- nameplateOtherTopInset       = "-1",
-	nameplateShowAll             = "1", -- always show nameplates, not just in combat, if they're enabled
+	nameplateShowAll             = "0", -- always show nameplates, not just in combat, if they're enabled
 	-- nameplateShowEnemyMinions    = "1",
 	nameplateShowEnemyMinus      = "1",
     nameplateShowSelf            = "0",
