@@ -211,41 +211,46 @@ function addon:DoMain()
 
 
 
+
+
+
     local _, class = UnitClass("player")
-    -- if class == "WARLOCK" then
+    -- if class == "WARLOCK" 
+
+    
         -- local f = CreateFrame("Model", "FnB_Frame", UIParent)
-        local f = CreateFrame("PlayerModel", "FnB_Frame", UIParent)
-        f:SetWidth(500)
-        f:SetHeight(500)
+        -- local f = CreateFrame("PlayerModel", "FnB_Frame", UIParent)
+        -- f:SetWidth(500)
+        -- f:SetHeight(500)
 
-        -- f:SetModel("SPELLS/Monk_ForceSpere_Orb.m2")
-        -- f:SetDisplayInfo(62059)
-        -- f:SetCamera(0)
-        -- , true, 0.018, 1.4, 0, 1.4
-        -- f:SetModelScale(0.07)
-        f:SetModelScale(1)
+        -- -- f:SetModel("SPELLS/Monk_ForceSpere_Orb.m2")
+        -- -- f:SetDisplayInfo(62059)
+        -- -- f:SetCamera(0)
+        -- -- , true, 0.018, 1.4, 0, 1.4
+        -- -- f:SetModelScale(0.07)
+        -- f:SetModelScale(1)
 
 
-        f:SetPosition(0,0,0)
+        -- f:SetPosition(0,0,0)
 
-        f:SetAlpha(1)
-        f:SetPoint("CENTER",50, 0)
+        -- f:SetAlpha(1)
+        -- f:SetPoint("CENTER",50, 0)
 
-        f:Show()
+        -- f:Show()
 
-        f.Break = function(self)
-            self:Hide()
-            self:SetModelScale(1)
-            self:SetPosition(0,0,0)
-        end
+        -- f.Break = function(self)
+        --     self:Hide()
+        --     self:SetModelScale(1)
+        --     self:SetPosition(0,0,0)
+        -- end
 
-        f.Fix = function(self)
-            self:SetModel("spells\\gouge_precast_state_hand.m2")--"SPELLS/Assassinate_Impact.m2")
-            self:SetModelScale(0.1)
-            self:SetPosition(1.4,1.4,0)
-            self:SetCamera(0)
+        -- f.Fix = function(self)
+        --     self:SetModel("spells\\gouge_precast_state_hand.m2")--"SPELLS/Assassinate_Impact.m2")
+        --     self:SetModelScale(0.1)
+        --     self:SetPosition(1.4,1.4,0)
+        --     self:SetCamera(0)
 
-        end
+        -- end
 
         -- f:RegisterUnitEvent("UNIT_AURA", "player")
         -- f:Hide()
@@ -505,6 +510,9 @@ function d87add.PLAYER_LOGIN()
         ReputationWatchBar:SetParent(MainMenuBarArtFrame)
 
     end
+
+    -- /dump NugCustomScrollFrame:SetHorizontalScroll(50)
+
 
     -- MultiBarBottomLeft:SetParent(UIParent)
     -- MultiBarBottomRight:SetParent(UIParent)
@@ -811,3 +819,84 @@ function d87add.PixelPerfect(number)
 	return uiScale * number
 end
 
+
+
+function addon:TestScrollFrameOnModels()
+    local Redraw = function(self)
+        if not self.model_path then return end
+    
+        self:SetModelScale(1)
+        self:SetPosition(0,0,0)
+    
+        if type(self.model_path) == "number" then
+            self:SetDisplayInfo(self.model_path)
+        else
+            self:SetModel(self.model_path)
+        end
+        self:SetModelScale(self.model_scale)
+        self:SetPosition(self.ox, self.oy, self.oz)
+    end
+    
+    local ResetTransformations = function(self)
+        -- print(self:GetName(), "hiding", self:GetCameraDistance(), self:GetCameraPosition())
+        self:SetModelScale(1)
+        self:SetPosition(0,0,0)
+    end
+    
+    local MakeModelRegion = function(self,w,h,model_path, x,y,z)
+        local pmf = CreateFrame("PlayerModel", nil, self )
+        pmf:SetSize(w,h)
+    
+        pmf.model_scale = 1
+        pmf.ox = x
+        pmf.oy = y
+        pmf.oz = z
+        pmf.model_path = model_path
+    
+        pmf:SetScript("OnHide", ResetTransformations)
+        pmf:SetScript("OnShow", Redraw)
+        pmf.Redraw = Redraw
+        pmf.ResetTransformations = ResetTransformations
+        pmf:Redraw()
+    
+        return pmf
+    end
+    -- local root = CreateFrame("Frame", "NugCustomTestRoot", UIParent)
+
+    local sf = CreateFrame("ScrollFrame", "NugCustomScrollFrame", UIParent)
+
+    local f = CreateFrame("Frame", "NugCustomTestFrame", sf)
+    f:SetWidth(200)
+    f:SetHeight(25)
+
+    local t = f:CreateTexture(nil, "ARTWORK",0)
+    t:SetTexture([[Interface\AddOns\NugRunning\statusbar.tga]])
+    t:SetAllPoints(f)
+
+    -- local t1 = f:CreateTexture(nil, "ARTWORK", 4)
+    -- t1:SetDrawLayer("ARTWORK", 4)
+    -- t1:SetTexture([[Interface\AddOns\NugHealth\shieldtex.tga]])
+    -- t1:SetHeight(25)
+    -- t1:SetWidth(100)
+    -- -- t1:SetTexCoord(0, 1, 0, 0.25 )
+    -- t1:SetAlpha(0.5)
+    -- t1:SetPoint("RIGHT", f, "RIGHT",0,0)
+
+
+    local bigBubbles1 = MakeModelRegion(f, 30, 25, "spells/7fx_nightmare_dustcloud_state.m2", -8.6, 0, -5.1 )
+    bigBubbles1:SetPoint("RIGHT", f, "RIGHT", 0, 0)
+
+    local bigBubbles2 = MakeModelRegion(bigBubbles1, 30, 25, "spells/7fx_nightmare_dustcloud_state.m2",  -8.6, 0, -5.1 )
+    bigBubbles2:SetPoint("RIGHT", f, "RIGHT", -50, 0)
+
+    sf:SetScrollChild(f)
+    sf:SetSize(f:GetWidth(), f:GetHeight())
+    sf:SetPoint("CENTER",0,0)
+    
+
+    f:SetPoint("CENTER",0,0)
+
+    sf:SetHorizontalScroll(50)
+
+    return sf
+end
