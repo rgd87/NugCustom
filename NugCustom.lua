@@ -10,6 +10,7 @@ LSM:Register("font", "ClearFont", [[Interface\AddOns\d87add\ClearFont.ttf]], 15)
 LSM:Register("font", "ClearFontBold", [[Interface\AddOns\d87add\ClearFontBold.ttf]], 15)
 
 _G.BINDING_NAME_D87ADD_CHANNELKEY1 = "Open /5 channel"
+_G.BINDING_NAME_D87ADD_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
 _G.BINDING_HEADER_D87ADD = addonName
 
 -- local f = CreateFrame"Frame"
@@ -483,10 +484,15 @@ end
 --     end
 -- end)
 
+
+
 d87add:RegisterEvent("PLAYER_LOGIN");
 function d87add.PLAYER_LOGIN()
     addon:FixCVars()
 
+    if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
+        ObjectiveTracker_Collapse()
+    end
 
     if (IsAddOnLoaded("Dominos")) then
         MainMenuBarArtFrame:SetParent(UIParent)
