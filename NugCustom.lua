@@ -142,6 +142,18 @@ function addon:DoMain()
     -- SetupTimestamps()
     addon:KuiProfileSwapper()
 
+    C_Timer.After(1, function()
+        ChatFrame1:SetUserPlaced(false);
+        ChatFrame1:ClearAllPoints()
+        ChatFrame1:SetWidth(436);
+        ChatFrame1:SetHeight(408);
+        ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 97)
+
+        ChatFrame1.isInitialized = 1;
+        FCF_SetWindowColor(ChatFrame1, 0,0,0);
+        FCF_SetWindowAlpha(ChatFrame1, 0);
+    end)
+
     -- local spells = {
     --     purple1 = { model = "spells\\seedofcorruption_state.mdx", scale = 1 },
     --     purple2 = { model = "spells\\gouge_precast_state_hand.mdx", scale = 3 }, -- good, warlock, rogue
@@ -488,6 +500,7 @@ end
 
 d87add:RegisterEvent("PLAYER_LOGIN");
 function d87add.PLAYER_LOGIN()
+    addon:DoMain()
     addon:FixCVars()
 
     if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
@@ -570,11 +583,10 @@ do
 end
 
 function d87add.ADDON_LOADED(self,event,arg1)
-    if arg1 ~= "d87add" then return end
+    if arg1 ~= addonName then return end
     -- if GetLocale() == "ruRU" then DoGlobalStrings() end
     -- GetLocale = function() return "enUS" end
     -- HideHotkeys()
-    addon:DoMain()
 
 
     -- FeedbackUISurveyFrameSurveysPanelAlertFrameButton1:ClearAllPoints()
