@@ -126,6 +126,8 @@ local cvars = {
 	screenshotQuality  = "12",
 	talentFrameShown   = "1",
 
+
+	rawMouseEnable		= "1", -- fix mouse cursor reset bug
 	-- Graphics
 	-- ffxGlow             = "0", -- full screen glow
 	-- groundEffectDist    = "100",
