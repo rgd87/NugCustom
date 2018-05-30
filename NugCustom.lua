@@ -14,8 +14,11 @@ _G.BINDING_NAME_D87ADD_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
 _G.BINDING_HEADER_D87ADD = addonName
 
 -- local f = CreateFrame"Frame"
+-- f:RegisterEvent("UPDATE_CHAT_WINDOWS")
+-- f:RegisterEvent("PLAYER_LOGIN")
 -- f:SetScript("OnEvent", function(self, event, ...)
---     return self[event](self, event, ...)
+--     print(GetTime(), event, ...)
+--     -- return self[event](self, event, ...)
 -- end)
 
 
@@ -130,6 +133,25 @@ function addon:KuiProfileSwapper()
     end)
 end
 
+function addon:MoveChat()
+    -- ChatFrame1:SetUserPlaced(false);
+    ChatFrame1:ClearAllPoints()
+    ChatFrame1:SetWidth(436);
+    ChatFrame1:SetHeight(408);
+    
+    ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 97)
+
+    -- ChatFrame1:StartMoving()
+    -- ChatFrame1:StopMovingOrSizing()
+    -- SetChatWindowLocked(1, true);
+
+    ChatFrame1.isInitialized = 1;
+    FCF_SetWindowColor(ChatFrame1, 0,0,0);
+    FCF_SetWindowAlpha(ChatFrame1, 0);
+    FCF_SavePositionAndDimensions(ChatFrame1)
+    FCF_SetLocked(ChatFrame1, true)
+end
+
 
 function addon:DoMain()
     -- SetCVar("CombatHealing", "1");
@@ -142,17 +164,9 @@ function addon:DoMain()
     -- SetupTimestamps()
     addon:KuiProfileSwapper()
 
-    C_Timer.After(3, function()
-        ChatFrame1:SetUserPlaced(false);
-        ChatFrame1:ClearAllPoints()
-        ChatFrame1:SetWidth(436);
-        ChatFrame1:SetHeight(408);
-        ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 97)
+    addon:MoveChat()
 
-        ChatFrame1.isInitialized = 1;
-        FCF_SetWindowColor(ChatFrame1, 0,0,0);
-        FCF_SetWindowAlpha(ChatFrame1, 0);
-    end)
+    -- C_Timer.After(10, MoveChat)
 
     -- local spells = {
     --     purple1 = { model = "spells\\seedofcorruption_state.mdx", scale = 1 },
