@@ -5,9 +5,9 @@ local d87add = CreateFrame("Frame", "d87add")
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
-LSM:Register("font", "Enigma", [[Interface\AddOns\d87add\Enigma__2.ttf]], 15)
-LSM:Register("font", "ClearFont", [[Interface\AddOns\d87add\ClearFont.ttf]], 15)
-LSM:Register("font", "ClearFontBold", [[Interface\AddOns\d87add\ClearFontBold.ttf]], 15)
+LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]], 15)
+LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]], 15)
+LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]], 15)
 
 _G.BINDING_NAME_D87ADD_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_D87ADD_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
@@ -142,7 +142,7 @@ function addon:DoMain()
     -- SetupTimestamps()
     addon:KuiProfileSwapper()
 
-    C_Timer.After(1, function()
+    C_Timer.After(3, function()
         ChatFrame1:SetUserPlaced(false);
         ChatFrame1:ClearAllPoints()
         ChatFrame1:SetWidth(436);
