@@ -9,9 +9,9 @@ LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]], 15)
 LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]], 15)
 LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]], 15)
 
-_G.BINDING_NAME_D87ADD_CHANNELKEY1 = "Open /5 channel"
-_G.BINDING_NAME_D87ADD_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
-_G.BINDING_HEADER_D87ADD = addonName
+_G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
+_G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
+_G.BINDING_HEADER_NUGCUSTOM = addonName
 
 -- local f = CreateFrame"Frame"
 -- f:RegisterEvent("UPDATE_CHAT_WINDOWS")
@@ -134,16 +134,12 @@ function addon:KuiProfileSwapper()
 end
 
 function addon:MoveChat()
-    -- ChatFrame1:SetUserPlaced(false);
+    ChatFrame1:SetClampedToScreen(false)
     ChatFrame1:ClearAllPoints()
-    ChatFrame1:SetWidth(436);
+    ChatFrame1:SetWidth(423);
     ChatFrame1:SetHeight(408);
     
-    ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 97)
-
-    -- ChatFrame1:StartMoving()
-    -- ChatFrame1:StopMovingOrSizing()
-    -- SetChatWindowLocked(1, true);
+    ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 40)
 
     ChatFrame1.isInitialized = 1;
     FCF_SetWindowColor(ChatFrame1, 0,0,0);
@@ -341,10 +337,12 @@ function addon:DoMain()
         local fnb_name = GetSpellInfo(108683)
         local bit_band = bit.band
         local COMBATLOG_OBJECT_AFFILIATION_MINE = COMBATLOG_OBJECT_AFFILIATION_MINE
-        f:SetScript("OnEvent", function( self, event, timestamp, eventType, hideCaster,
-                srcGUID, srcName, srcFlags, srcFlags2,
-                dstGUID, dstName, dstFlags, dstFlags2,
-                spellID, spellName, spellSchool, auraType, amount)
+        f:SetScript("OnEvent", function( self, event)
+
+            local timestamp, eventType, hideCaster,
+            srcGUID, srcName, srcFlags, srcFlags2,
+            dstGUID, dstName, dstFlags, dstFlags2,
+            spellID, spellName, spellSchool, auraType, amount = CombatLogGetCurrentEventInfo()
             -- local name = UnitAura("player", fnb_name, nil, "HELPFUL")
             local isSrcPlayer = (bit_band(srcFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE)
             if isSrcPlayer and eventType == "SPELL_CAST_SUCCESS" and spellID == 124506 or spellID == 124503 then
@@ -487,26 +485,27 @@ function d87add.Clear()
 end
 
 
-
 -- local SpecMacros = CreateFrame("Frame")
--- SpecMacros:RegisterEvent("PLAYER_ENTERING_WORLD")
---
+-- SpecMacros:RegisterEvent("PLAYER_LOGIN")
+
 -- SpecMacros:SetScript("OnEvent", function(self)
 --     if not InCombatLockdown() then
 --         local numSpec = GetNumSpecializations()
---         -- print(numSpec)
---         for i=1, GetNumSpecializations() do
+--         for i=1, numSpec do
 --             local macroname = "SpecMacro"..i
 --             local index = GetMacroIndexByName(macroname)
 --             if index == 0 then
---                 index = CreateMacro(macroname, "Interface\\Icons\\Spell_Shadow_AntiShadow", string.format("/script SetSpecialization(%d)", i), nil)
+--                 index = CreateMacro(macroname, 135754, string.format("/script SetSpecialization(%d)", i), nil)
 --                 if not index or index == 0 then return end
 --             end
 --             local gID, _, _, icon = GetSpecializationInfo(i)
---             print(GetSpecializationInfoByID(gID))
---             print(index, icon)
+
 --             EditMacro(index, nil, icon, nil)
 --         end
+
+--         self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+--     else
+--         self:RegisterEvent("PLAYER_REGEN_ENABLED")
 --     end
 -- end)
 
@@ -517,32 +516,56 @@ function d87add.PLAYER_LOGIN()
     addon:DoMain()
     addon:FixCVars()
 
+
+    if Confused then
+        local PTR_IssueReporter = Confused:GetParent()
+        PTR_IssueReporter:SetClampedToScreen(false)
+        PTR_IssueReporter:ClearAllPoints()
+        PTR_IssueReporter:SetPoint("CENTER", 2000, 0)
+    end
+
+
     if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
         ObjectiveTracker_Collapse()
     end
 
-    if (IsAddOnLoaded("Dominos")) then
-        MainMenuBarArtFrame:SetParent(UIParent)
-        MainMenuBarArtFrame:SetFrameStrata("LOW")
 
-        -- MainMenuBarRightEndCap:SetParent(MainMenuBarArtFrame)
-        -- MainMenuBarLeftEndCap:SetParent(MainMenuBarArtFrame)
+    -- StatusTrackingBarManager:HideStatusBars()
+    -- StatusTrackingBarManager.GetNumberVisibleBars = function() return 0 end
+    -- MainMenuBar:SetPositionForStatusBars()
 
-        MainMenuBarArtFrame:ClearAllPoints()
-        MainMenuBarArtFrame:SetWidth(1024)
-        MainMenuBarArtFrame:SetHeight(53)
-        MainMenuBarArtFrame:SetPoint("BOTTOM",UIParent,"BOTTOM",0,0)
+    hooksecurefunc(MainMenuBar, "SetPositionForStatusBars", function()
+        StatusTrackingBarManager:HideStatusBars()
+        MainMenuBar:SetPoint("BOTTOM", MainMenuBar:GetParent(), 0, 0);
+		MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0); 
+        MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0); 
+        if ( IsPlayerInWorld() ) then
+            UIParent_ManageFramePositions();
+        end
+    end)
+
+    -- if (IsAddOnLoaded("Dominos")) then
+    --     MainMenuBarArtFrame:SetParent(UIParent)
+    --     MainMenuBarArtFrame:SetFrameStrata("LOW")
+
+    --     -- MainMenuBarRightEndCap:SetParent(MainMenuBarArtFrame)
+    --     -- MainMenuBarLeftEndCap:SetParent(MainMenuBarArtFrame)
+
+    --     MainMenuBarArtFrame:ClearAllPoints()
+    --     MainMenuBarArtFrame:SetWidth(1024)
+    --     MainMenuBarArtFrame:SetHeight(53)
+    --     MainMenuBarArtFrame:SetPoint("BOTTOM",UIParent,"BOTTOM",0,0)
 
 
-        MainMenuBarMaxLevelBar:SetParent(MainMenuBarArtFrame)
-        MainMenuBarMaxLevelBar:SetPoint("TOP", MainMenuBarArtFrame, "TOP", 0,-11)
-        MainMenuBarMaxLevelBar.SetPoint = function() end
-        MainMenuBarMaxLevelBar.SetParent = function() end
+    --     MainMenuBarMaxLevelBar:SetParent(MainMenuBarArtFrame)
+    --     MainMenuBarMaxLevelBar:SetPoint("TOP", MainMenuBarArtFrame, "TOP", 0,-11)
+    --     MainMenuBarMaxLevelBar.SetPoint = function() end
+    --     MainMenuBarMaxLevelBar.SetParent = function() end
 
-        MainMenuExpBar:SetParent(MainMenuBarArtFrame)
-        ReputationWatchBar:SetParent(MainMenuBarArtFrame)
+    --     MainMenuExpBar:SetParent(MainMenuBarArtFrame)
+    --     ReputationWatchBar:SetParent(MainMenuBarArtFrame)
 
-    end
+    -- end
 
     -- /dump NugCustomScrollFrame:SetHorizontalScroll(50)
 
@@ -601,6 +624,7 @@ function d87add.ADDON_LOADED(self,event,arg1)
     -- if GetLocale() == "ruRU" then DoGlobalStrings() end
     -- GetLocale = function() return "enUS" end
     -- HideHotkeys()
+
 
 
     -- FeedbackUISurveyFrameSurveysPanelAlertFrameButton1:ClearAllPoints()

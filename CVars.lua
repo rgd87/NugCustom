@@ -110,6 +110,9 @@ local cvars = {
 	-- UnitNameNPC                  = "0",
 	-- ShowQuestUnitCircles         = "1",
 
+	displaySpellActivationOverlays = "0",
+	spellActivationOverlayOpacity = "0",
+
 	-- Camera
 	cameraDistanceMaxZoomFactor = "2.6",
 	cameraSmoothStyle           = "0",   -- Never adjust

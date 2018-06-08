@@ -1,8 +1,8 @@
 <Bindings>
-	<Binding name="D87ADD_CHANNELKEY1" header="D87ADD" category="ADDONS">
+	<Binding name="NUGCUSTOM_CHANNELKEY1" header="NUGCUSTOM" category="ADDONS">
 		ChatFrame_OpenChat("/5 ")
 	</Binding>
-	<Binding name="D87ADD_OBJECTIVE_TOGGLE" header="D87ADD" category="ADDONS">
+	<Binding name="NUGCUSTOM_OBJECTIVE_TOGGLE" category="ADDONS">
 		ObjectiveTracker_MinimizeButton_OnClick()
 	</Binding>
 </Bindings>

@@ -54,7 +54,8 @@ function EnsureBindings(doActionBars)
         -- ["SHIFT-SPACE"] = "MULTIACTIONBAR4BUTTON12",
         ["SHIFT-X"] = "SITORSTAND",
 
-        ["ALT-Y"] = "five", -- prat channel command
+        ["ALT-Y"] = "NUGCUSTOM_CHANNELKEY1", -- /5 channel command
+        ["SHIFT-T"] = "NUGCUSTOM_OBJECTIVE_TOGGLE", -- toggle objective tracker
 
         ["ALT-P"] = "TOGGLEPETJOURNAL",
         ["NUMPAD1"] = "Toggle Autosummon",
