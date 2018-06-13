@@ -397,9 +397,16 @@ function addon:DoMain()
     --     print(event, unit, health)
     -- end)
 
-    d87add.dump = function(msg)
+    d87add.dumpmsg = function(msg)
         UIParentLoadAddOn("Blizzard_DebugTools");
         DevTools_DumpCommand(msg);
+    end
+
+    d87add.dump = function(t)
+        if not IsAddOnLoaded("Blizzard_DebugTools") then
+            UIParentLoadAddOn("Blizzard_DebugTools");
+        end
+        DevTools_Dump(t);
     end
 
     -- AchievementMicroButton_Update = function() end -- fix for blizzard bug
@@ -510,6 +517,91 @@ end
 -- end)
 
 
+function d87add:MakeAzeriteThing()
+    -- local item = Item:CreateFromEquipmentSlot(1)
+    -- item:Get
+
+    -- SetPortraitToTexture
+
+    local powersFrame = CreateFrame("Frame", nil)
+    powersFrame:SetSize(10,10)
+    powersFrame.icons = {}
+    for i=1, 12 do
+        local t = powersFrame:CreateTexture(nil, "ARTWORK", nil, 0)
+        t:SetSize(24, 24)
+        t:SetTexCoord(.1, .9, .1, .9)
+        table.insert(powersFrame.icons, t)
+    end
+    powersFrame.ResetPool = function(self)
+        if self.index == 1 then return end
+        for i, t in ipairs(self.icons) do
+            t:Hide()
+            t:ClearAllPoints()
+        end
+        self.index = 1
+    end
+
+    powersFrame.GetFreeIcon = function(self)
+        local t = self.icons[self.index]
+        self.index = self.index + 1
+        t:Show()
+        return t
+    end
+
+    powersFrame:ResetPool()
+
+    GameTooltip:HookScript("OnTooltipSetItem", function(self)
+        local _, itemLink = self:GetItem();
+        local item = Item:CreateFromItemLink(itemLink)
+        local itemID = item:GetItemID()
+
+        local isAzeriteEmpowered = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(itemID)
+        if isAzeriteEmpowered then
+            local allTierInfo = C_AzeriteEmpoweredItem.GetAllTierInfoByItemID(itemID)
+            
+            -- print(itemID)
+            -- d87add.dump(allTierInfo)
+
+            local width1 = self:GetWidth()
+            local height1 = self:GetHeight()
+            -- print(width1, height1)
+            powersFrame:SetParent(self)
+            powersFrame:SetPoint("TOPLEFT")
+
+            powersFrame:ResetPool()
+
+            for tierNum, tier in ipairs(allTierInfo) do
+                self:AddLine(" ")
+                local numLines = self:NumLines()
+                local newLine = _G[self:GetName().."TextLeft"..numLines]
+                
+                self:AddLine(" ")
+
+                local tierUnlockLevel = tier.unlockLevel
+                newLine:SetText(tierUnlockLevel)
+
+                local prev
+                for i, powerID in ipairs(tier.azeritePowerIDs) do
+                    local spellID = C_AzeriteEmpoweredItem.GetPowerInfo(powerID).spellID
+                    local name, _, tex = GetSpellInfo(spellID)
+
+                    local t = powersFrame:GetFreeIcon()
+                    t:SetTexture(tex)
+                    -- print(tierNum, numLines, spellID, tex)
+                    if not prev then
+                        t:SetPoint("TOPLEFT", newLine, "TOPLEFT",13, 0)
+                    else
+                        t:SetPoint("TOPLEFT", prev, "TOPRIGHT",5, 0)
+                    end
+                    prev = t
+                end
+            end
+
+        else
+            powersFrame:ResetPool()
+        end
+    end);
+end
 
 d87add:RegisterEvent("PLAYER_LOGIN");
 function d87add.PLAYER_LOGIN()
@@ -519,10 +611,17 @@ function d87add.PLAYER_LOGIN()
 
     if Confused then
         local PTR_IssueReporter = Confused:GetParent()
+        if Dash then
+            Dash:Steal(PTR_IssueReporter, nil, true)
+        end
+
         PTR_IssueReporter:SetClampedToScreen(false)
-        PTR_IssueReporter:ClearAllPoints()
-        PTR_IssueReporter:SetPoint("CENTER", 2000, 0)
+        -- PTR_IssueReporter:ClearAllPoints()
+        -- PTR_IssueReporter:SetPoint("CENTER", 0, 0)
+        -- PTR_IssueReporter:SetPoint("CENTER", 2000, 0)
     end
+
+    d87add:MakeAzeriteThing()
 
 
     if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
@@ -534,15 +633,16 @@ function d87add.PLAYER_LOGIN()
     -- StatusTrackingBarManager.GetNumberVisibleBars = function() return 0 end
     -- MainMenuBar:SetPositionForStatusBars()
 
-    hooksecurefunc(MainMenuBar, "SetPositionForStatusBars", function()
-        StatusTrackingBarManager:HideStatusBars()
-        MainMenuBar:SetPoint("BOTTOM", MainMenuBar:GetParent(), 0, 0);
-		MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0); 
-        MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0); 
-        if ( IsPlayerInWorld() ) then
-            UIParent_ManageFramePositions();
-        end
-    end)
+    -- hooksecurefunc(MainMenuBar, "SetPositionForStatusBars", function()
+    --     StatusTrackingBarManager:HideStatusBars()
+    --     MainMenuBar:SetPoint("BOTTOM", MainMenuBar:GetParent(), 0, 0);
+	-- 	MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0); 
+    --     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0); 
+    --     if ( IsPlayerInWorld() ) then
+    --         UIParent_ManageFramePositions();
+    --     end
+    -- end)
+
 
     -- if (IsAddOnLoaded("Dominos")) then
     --     MainMenuBarArtFrame:SetParent(UIParent)

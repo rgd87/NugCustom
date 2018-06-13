@@ -84,7 +84,7 @@ local cvars = {
 	-- nameplateShowEnemyMinions    = "1",
 	nameplateShowEnemyMinus      = "1",
     nameplateShowSelf            = "0",
-    nameplateMaxDistance         = "70",
+    nameplateMaxDistance         = "50",
 
 	-- Unit Frames
 	-- fullSizeFocusFrame   = "1",
@@ -131,6 +131,7 @@ local cvars = {
 
 
 	rawMouseEnable		= "1", -- fix mouse cursor reset bug
+	ClipCursor			= "1",
 	-- Graphics
 	-- ffxGlow             = "0", -- full screen glow
 	-- groundEffectDist    = "100",
