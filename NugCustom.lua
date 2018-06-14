@@ -550,6 +550,10 @@ function d87add:MakeAzeriteThing()
 
     powersFrame:ResetPool()
 
+    GameTooltip:HookScript("OnHide", function()
+        powersFrame:ResetPool()
+    end)
+
     GameTooltip:HookScript("OnTooltipSetItem", function(self)
         local _, itemLink = self:GetItem();
         local item = Item:CreateFromItemLink(itemLink)
