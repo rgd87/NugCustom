@@ -62,6 +62,7 @@ local cvars = {
 	chatStyle                = "classic",
     -- chatTimestamps           = "none",
 	colorChatNamesByClass    = "1", -- no UI
+	chatClassColorOverride   = "0", -- 0 means always use class colors
 	-- guildMemberNotify        = "0",
 	profanityFilter          = "0",
 	removeChatDelay          = "1",
@@ -80,7 +81,7 @@ local cvars = {
 	nameplateMotion              = "0", -- 1 =  Stacking, 0 = Overlapping
 	-- nameplateOtherBottomInset    = "-1", -- don't stick nameplates to the screen edges for offscreen mobs
 	-- nameplateOtherTopInset       = "-1",
-	nameplateShowAll             = "0", -- always show nameplates, not just in combat, if they're enabled
+	nameplateShowAll             = "1", -- always show nameplates, not just in combat, if they're enabled
 	-- nameplateShowEnemyMinions    = "1",
 	nameplateShowEnemyMinus      = "1",
     nameplateShowSelf            = "0",

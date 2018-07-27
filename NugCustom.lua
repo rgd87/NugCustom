@@ -5,9 +5,9 @@ local d87add = CreateFrame("Frame", "d87add")
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
-LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]], 15)
-LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]], 15)
-LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]], 15)
+LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
 
 _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
@@ -123,7 +123,7 @@ function addon:KuiProfileSwapper()
 
         if class == "WARLOCK" then
             if current_profile ~= "dots" then kuiconfig:SetProfile("dots") end
-        elseif class == "PRIEST" and spec == 3 then
+        elseif class == "PRIEST" and spec == 3 or spec == 1 then
             if current_profile ~= "dots" then kuiconfig:SetProfile("dots") end
         elseif class == "DRUID" and (spec == 2 or spec == 1) then
             if current_profile ~= "dots" then kuiconfig:SetProfile("dots") end
@@ -136,10 +136,10 @@ end
 function addon:MoveChat()
     ChatFrame1:SetClampedToScreen(false)
     ChatFrame1:ClearAllPoints()
-    ChatFrame1:SetWidth(423);
+    ChatFrame1:SetWidth(432);
     ChatFrame1:SetHeight(408);
     
-    ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 40)
+    ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 32)
 
     ChatFrame1.isInitialized = 1;
     FCF_SetWindowColor(ChatFrame1, 0,0,0);
@@ -147,6 +147,40 @@ function addon:MoveChat()
     FCF_SavePositionAndDimensions(ChatFrame1)
     FCF_SetLocked(ChatFrame1, true)
 end
+
+
+
+-- LiteralName = "VOICE_CHAT_CHANNEL_JOINED",
+-- 			Payload =
+-- 			{
+-- 				{ Name = "status", Type = "VoiceChatStatusCode", Nilable = false },
+-- 				{ Name = "channelID", Type = "number", Nilable = false },
+-- 				{ Name = "channelType", Type = "ChatChannelType", Nilable = false },
+-- 				{ Name = "clubId", Type = "string", Nilable = true },
+-- 				{ Name = "streamId", Type = "string", Nilable = true },
+-- 			},
+
+-- -------> Local player joins the voice chat
+-- LiteralName = "VOICE_CHAT_CHANNEL_ACTIVATED",
+-- 			Payload =
+-- 			{
+-- 				{ Name = "channelID", Type = "number", Nilable = false },
+
+-- Dump: value=Enum.ChatChannelType
+-- [1]={
+--   Custom=1,
+--   Private_Party=2,
+--   Public_Party=3,
+--   Communities=4,
+--   None=0
+-- }
+
+-- GetActiveChannelType
+
+-- d87add:RegisterEvent("VOICE_CHAT_CHANNEL_MEMBER_SPEAKING_STATE_CHANGED")
+-- function d87add:VOICE_CHAT_CHANNEL_MEMBER_SPEAKING_STATE_CHANGED(event, memberID, channelID, isSpeaking)
+--     print(memberID, channelID, isSpeaking)
+-- end
 
 
 function addon:DoMain()
@@ -159,7 +193,6 @@ function addon:DoMain()
 
     -- SetupTimestamps()
     addon:KuiProfileSwapper()
-
     addon:MoveChat()
 
     -- C_Timer.After(10, MoveChat)
@@ -607,45 +640,57 @@ function d87add:MakeAzeriteThing()
     end);
 end
 
+
+-- MainMenuBar:SetMovable(true)
+-- MainMenuBar:SetUserPlaced(true)
+-- MainMenuBar:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 0);
+
+-- hooksecurefunc(MainMenuBar, "SetPositionForStatusBars", function(self)
+--     StatusTrackingBarManager:HideStatusBars()
+--     if not InCombatLockdown() then
+--         MainMenuBar:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 0);
+--     end
+--     MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0); 
+--     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0);
+-- end)
+
+
 d87add:RegisterEvent("PLAYER_LOGIN");
 function d87add.PLAYER_LOGIN()
     addon:DoMain()
     addon:FixCVars()
 
+    -- addon:TestScrollFrameOnModels()
+    -- addon:TestSetTransform()
 
     if Confused then
-        local PTR_IssueReporter = Confused:GetParent()
-        if Dash then
-            Dash:Steal(PTR_IssueReporter, nil, true)
-        end
+        -- local PTR_IssueReporter = Confused:GetParent()
+        -- if InterfaceLayer then
+            -- InterfaceLayer:Reparent(PTR_IssueReporter)
+        -- end
 
-        PTR_IssueReporter:SetClampedToScreen(false)
+        -- PTR_IssueReporter:SetClampedToScreen(false)
+
+
         -- PTR_IssueReporter:ClearAllPoints()
         -- PTR_IssueReporter:SetPoint("CENTER", 0, 0)
         -- PTR_IssueReporter:SetPoint("CENTER", 2000, 0)
     end
 
-    d87add:MakeAzeriteThing()
+    -- d87add:MakeAzeriteThing()
 
 
     if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
         ObjectiveTracker_Collapse()
     end
 
+    
+    -- MainMenuBar:ClearAllPoints()
+    -- MainMenuBar:SetPoint("CENTER", UIParent, "CENTER",0,0)
+    -- -- StatusTrackingBarManager:HideStatusBars()
+    -- -- StatusTrackingBarManager.GetNumberVisibleBars = function() return 0 end
 
-    -- StatusTrackingBarManager:HideStatusBars()
-    -- StatusTrackingBarManager.GetNumberVisibleBars = function() return 0 end
     -- MainMenuBar:SetPositionForStatusBars()
-
-    -- hooksecurefunc(MainMenuBar, "SetPositionForStatusBars", function()
-    --     StatusTrackingBarManager:HideStatusBars()
-    --     MainMenuBar:SetPoint("BOTTOM", MainMenuBar:GetParent(), 0, 0);
-	-- 	MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0); 
-    --     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0); 
-    --     if ( IsPlayerInWorld() ) then
-    --         UIParent_ManageFramePositions();
-    --     end
-    -- end)
 
 
     -- if (IsAddOnLoaded("Dominos")) then
@@ -998,7 +1043,6 @@ function addon:TestScrollFrameOnModels()
     end
     
     local ResetTransformations = function(self)
-        -- print(self:GetName(), "hiding", self:GetCameraDistance(), self:GetCameraPosition())
         self:SetModelScale(1)
         self:SetPosition(0,0,0)
     end
@@ -1046,7 +1090,7 @@ function addon:TestScrollFrameOnModels()
     local bigBubbles1 = MakeModelRegion(f, 30, 25, "spells/7fx_nightmare_dustcloud_state.m2", -8.6, 0, -5.1 )
     bigBubbles1:SetPoint("RIGHT", f, "RIGHT", 0, 0)
 
-    local bigBubbles2 = MakeModelRegion(bigBubbles1, 30, 25, "spells/7fx_nightmare_dustcloud_state.m2",  -8.6, 0, -5.1 )
+    local bigBubbles2 = MakeModelRegion(f, 30, 25, "spells/7fx_nightmare_dustcloud_state.m2",  -8.6, 0, -5.1 )
     bigBubbles2:SetPoint("RIGHT", f, "RIGHT", -50, 0)
 
     sf:SetScrollChild(f)
@@ -1059,4 +1103,74 @@ function addon:TestScrollFrameOnModels()
     sf:SetHorizontalScroll(50)
 
     return sf
+end
+
+function addon:TestSetTransform()
+    local Redraw = function(self)
+        if not self.model_path then return end
+    
+        if type(self.model_path) == "number" then
+            self:SetDisplayInfo(self.model_path)
+        else
+            self:SetModel(self.model_path)
+        end
+        self:SetTransform(unpack(self.transformations))
+    end
+    
+    local ResetTransformations = function(self)
+        self:ClearTransform()
+    end
+    
+    local MakeModelRegion = function(self,w,h,model_path, ...)
+        local pmf = CreateFrame("PlayerModel", nil, self )
+        pmf:SetSize(w,h)
+    
+        pmf.transformations = { ... }
+        pmf.model_path = model_path
+    
+        -- before 8.0 this was a required workaround for a bug
+        -- that made models disappear after opening fullscreen map or entering cutscene
+        pmf:SetScript("OnHide", ResetTransformations)
+        pmf:SetScript("OnShow", Redraw)
+        pmf.Redraw = Redraw
+        pmf.ResetTransformations = ResetTransformations
+        pmf:Redraw()
+    
+        return pmf
+    end
+
+
+    local f = MakeModelRegion(UIParent, 100, 100, "spells/blessingoffreedom_state.m2", 0.0255,0.0255,0, rad(90), rad(270), rad(270), 0.006)
+    f:SetPoint("CENTER")
+    f:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
+        insets = {left = -2, right = -2, top = -2, bottom = -2},
+    })
+    f:SetBackdropColor(0,0,0,0.5)
+
+    local rect = f:CreateTexture(nil, "BACKGROUND", nil, -2)
+    rect:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    rect:SetVertexColor(0,0,0)
+    rect:SetSize(40, 40)
+    rect:SetPoint("CENTER")
+    local vline = f:CreateLine(nil, "BACKGROUND")
+    vline:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    vline:SetStartPoint("TOP", f, 0,0)
+    vline:SetEndPoint("BOTTOM", f, 0,0)
+    vline:SetThickness(1)
+    vline:SetVertexColor(1,1,1)
+    local hline = f:CreateLine(nil, "BACKGROUND")
+    hline:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    hline:SetStartPoint("LEFT", f, 0,0)
+    hline:SetEndPoint("RIGHT", f, 0,0)
+    hline:SetThickness(1)
+    hline:SetVertexColor(1,1,1)
+
+
+    TransformTestModel = f
+    TransformTestModel:Redraw()
+
+    -- TransformTestModel:SetScale(2)
+    -- frame scales, model doesnt, but if you manually multiply
+    -- offsets and model scale by frame scale it'll catch up
 end
