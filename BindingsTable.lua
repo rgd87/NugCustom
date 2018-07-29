@@ -34,8 +34,11 @@ function EnsureBindings(doActionBars)
         ["ALT-R"] = "MULTIACTIONBAR1BUTTON8",
         ["ALT-Q"] = "MULTIACTIONBAR1BUTTON9",
         ["ALT-F2"] = "MULTIACTIONBAR1BUTTON10",
-        ["ALT-BUTTON4"] = "MULTIACTIONBAR1BUTTON11",
-        ["F4"] = "MULTIACTIONBAR1BUTTON11",
+        ["F3"] = "MULTIACTIONBAR1BUTTON11",
+        ["F4"] = "MULTIACTIONBAR1BUTTON12",
+
+        ["SHIFT-BUTTON4"] = "MULTIACTIONBAR2BUTTON11",
+        ["ALT-F1"] = "MULTIACTIONBAR2BUTTON12",
     }
 
     local globalBindings = {
@@ -57,15 +60,18 @@ function EnsureBindings(doActionBars)
         ["ALT-Y"] = "NUGCUSTOM_CHANNELKEY1", -- /5 channel command
         ["SHIFT-T"] = "NUGCUSTOM_OBJECTIVE_TOGGLE", -- toggle objective tracker
 
-        ["ALT-P"] = "TOGGLEPETJOURNAL",
-        ["NUMPAD1"] = "Toggle Autosummon",
-        ["NUMPAD2"] = "Summon Random Pet",
-        ["NUMPAD3"] = "Dismiss + Disable",
+
+        ["ALT-P"] = "TOGGLECOLLECTIONSPETJOURNAL",
+        ["SHIFT-P"] = "TOGGLECOLLECTIONS",
+        ["NUMPAD1"] = "NUGMINIPETTOGGLE",
+        ["NUMPAD2"] = "NUGMINIPETRANDOMPET",
+        ["NUMPAD3"] = "NUGMINIPETDISABLE",
 
         ["SHIFT-MOUSEWHEELDOWN"] = "TARGETNEARESTENEMY",
         ["SHIFT-MOUSEWHEELUP"] = "TARGETPREVIOUSENEMY",
 
-        ["U"] = "TOGGLEGUILDTAB",
+        ["J"] = "TOGGLEGUILDTAB",
+        ["U"] = "TOGGLECHATTAB",
         ["K"] = "NAMEPLATES",
         ["ALT-K"] = "FRIENDNAMEPLATES",
         ["I"] = "Inspect",
