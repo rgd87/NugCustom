@@ -1,6 +1,7 @@
 local function FeedBindingTable(t)
     LoadBindings(2) -- 2 = character bindings
     for key, command in pairs(t) do
+        if command == "NONE" then command = nil end
         if GetBindingAction(key) ~= command then
             SetBinding(key, command)
         end
@@ -37,8 +38,14 @@ function EnsureBindings(doActionBars)
         ["F3"] = "MULTIACTIONBAR1BUTTON11",
         ["F4"] = "MULTIACTIONBAR1BUTTON12",
 
+        ["ALT-F1"] = "MULTIACTIONBAR2BUTTON5",
+        ["ALT-G"] = "MULTIACTIONBAR2BUTTON6",
+        ["G"] = "MULTIACTIONBAR2BUTTON7",
+        ["H"] = "MULTIACTIONBAR2BUTTON8",
+        ["6"] = "MULTIACTIONBAR2BUTTON9",
+        ["C"] = "MULTIACTIONBAR2BUTTON10",
         ["SHIFT-BUTTON4"] = "MULTIACTIONBAR2BUTTON11",
-        ["ALT-F1"] = "MULTIACTIONBAR2BUTTON12",
+        ["V"] = "MULTIACTIONBAR2BUTTON12",
     }
 
     local globalBindings = {
@@ -51,6 +58,8 @@ function EnsureBindings(doActionBars)
         ["F9"] = "RAIDTARGET5",
         ["F10"] = "RAIDTARGET1",
         ["F11"] = "NONE",
+
+        ["U"] = "TOGGLECHARACTER0",
 
         ["SHIFT-Z"] = "TOGGLESHEATH",
         ["Z"] = "MULTIACTIONBAR4BUTTON12", --mount
@@ -71,13 +80,15 @@ function EnsureBindings(doActionBars)
         ["SHIFT-MOUSEWHEELUP"] = "TARGETPREVIOUSENEMY",
 
         ["J"] = "TOGGLEGUILDTAB",
-        ["U"] = "TOGGLECHATTAB",
+        ["SHIFT-J"] = "TOGGLECHATTAB",
         ["K"] = "NAMEPLATES",
         ["ALT-K"] = "FRIENDNAMEPLATES",
         ["I"] = "Inspect",
         ["Y"] = "REPLY",
-        ["SHIFT-C"] = "NEXTACTIONPAGE",
-        ["SHIFT-V"] = "ACTIONPAGE1",
+        ["SHIFT-7"] = "NEXTACTIONPAGE",
+        ["SHIFT-8"] = "ACTIONPAGE1",
+        ["SHIFT-C"] = "NONE",
+        ["SHIFT-V"] = "NONE",
     }
 
     FeedBindingTable(globalBindings)
