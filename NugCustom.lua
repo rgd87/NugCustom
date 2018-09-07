@@ -5,9 +5,9 @@ local d87add = CreateFrame("Frame", "d87add")
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
-LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
-LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
-LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "Enigma", [[Interface\AddOns\_NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "ClearFont", [[Interface\AddOns\_NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "ClearFontBold", [[Interface\AddOns\_NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
 
 _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
@@ -21,6 +21,9 @@ _G.BINDING_HEADER_NUGCUSTOM = addonName
 --     -- return self[event](self, event, ...)
 -- end)
 
+-- hooksecurefunc("LFGListSearchPanel_DoSearch", function(self)
+--     print(self.categoryID, self.filters, self.preferredFilters, languages)
+-- end)
 
 --
 -- local CreateCircleFrame = function()
@@ -123,12 +126,14 @@ function addon:KuiProfileSwapper()
 
         if class == "WARLOCK" then
             if current_profile ~= "dots" then kuiconfig:SetProfile("dots") end
-        elseif class == "PRIEST" and spec == 3 or spec == 1 then
+        elseif class == "PRIEST" and (spec == 3 or spec == 1) then
             if current_profile ~= "dots" then kuiconfig:SetProfile("dots") end
         elseif class == "DRUID" and (spec == 2 or spec == 1) then
             if current_profile ~= "dots" then kuiconfig:SetProfile("dots") end
         else
-            if current_profile ~= "default" then kuiconfig:SetProfile("default") end
+            if current_profile ~= "default" then
+                kuiconfig:SetProfile("default")
+            end
         end
     end)
 end

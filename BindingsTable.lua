@@ -80,7 +80,8 @@ function EnsureBindings(doActionBars)
         ["SHIFT-MOUSEWHEELUP"] = "TARGETPREVIOUSENEMY",
 
         ["J"] = "TOGGLEGUILDTAB",
-        ["SHIFT-J"] = "TOGGLECHATTAB",
+        ["SHIFT-U"] = "TOGGLECHATTAB",
+        ["SHIFT-J"] = "TOGGLEENCOUNTERJOURNAL",
         ["K"] = "NAMEPLATES",
         ["ALT-K"] = "FRIENDNAMEPLATES",
         ["I"] = "Inspect",
