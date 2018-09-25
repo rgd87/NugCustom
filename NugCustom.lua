@@ -5,9 +5,9 @@ local d87add = CreateFrame("Frame", "d87add")
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
-LSM:Register("font", "Enigma", [[Interface\AddOns\_NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
-LSM:Register("font", "ClearFont", [[Interface\AddOns\_NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
-LSM:Register("font", "ClearFontBold", [[Interface\AddOns\_NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
 
 _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"

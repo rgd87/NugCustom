@@ -78,7 +78,7 @@ local cvars = {
 	-- floatingCombatTextReactives     = "0",
 
 	-- Nameplates
-	nameplateMotion              = "0", -- 1 =  Stacking, 0 = Overlapping
+	nameplateMotion              = "1", -- 1 =  Stacking, 0 = Overlapping
 	-- nameplateOtherBottomInset    = "-1", -- don't stick nameplates to the screen edges for offscreen mobs
 	-- nameplateOtherTopInset       = "-1",
 	nameplateShowAll             = "1", -- always show nameplates, not just in combat, if they're enabled
