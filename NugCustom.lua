@@ -13,6 +13,77 @@ _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
 _G.BINDING_HEADER_NUGCUSTOM = addonName
 
+
+
+local mymodels_ncb = {
+    "spells\\gouge_precast_state_hand.m2",
+    "spells/7fx_nightborne_precasthand.m2",
+    "SPELLS/Shadowflame_Cast_Hand.m2",
+    "spells\\Holy_precast_med_hand_simple.m2",
+    "spells\\Paladin_headlinghands_state_01.m2",
+    "SPELLS/Shadow_Strikes_State_Hand.m2",
+    "spells\\blessingoffreedom_state.m2",
+    "spells/druid_wrath_impact_v2.m2",
+    "SPELLS/Precast_Corrupted_01.m2",
+    "spells/6fx_smallfire.m2",
+    "spells/cfx_mage_greaterpyroblast_missile.m2",
+    "spells/bloodlust_state_hand.m2",
+    "SPELLS/Monk_ChiBlast_Precast_Jade.m2",
+    "SPELLS/Monk_ChiBlast_Precast.m2",
+    "SPELLS/Monk_CracklingLightning_Impact_Blue.m2",
+    "spells/7fx_deathknight_scourgeofworlds_statechest.m2",
+    "spells/7fx_warlock_shadow_missile.m2",
+    "spells\\soulfunnel_impact_chest.m2",
+    "spells\\healrag_state_chest.m2",
+    "spells/enchantments/greenflame_low.m2",
+    "spells/enchantments/blueflame_low.m2",
+    "spells/enchantments/redflame_low.m2",
+    "spells/enchantments/whiteflame_low.m2",
+    "spells/enchantments/redglow_high.m2",
+    "spells/enchantments/yellowflame_low.m2",
+    "spells/enchantments/purpleflame_low.m2",
+    "spells\\lifetap_state_chest.m2",
+    "spells/monk_avertharm_state_base.m2",
+    "spells/divineshield_v2_chest.m2",
+    "spells/weaponenchant_pvppandarias2.m2",
+    "spells/cast_arcane_pink_01.m2",
+    "spells/antimagic_precast_hand_02red.m2",
+    "spells/arcaneshot_missile.m2",
+    "spells\\lightningbolt_missile.m2",
+    "SPELLS/FlowingWater_High.m2",
+}
+
+local mymodels_nrun = {
+    "spells/7fx_nightborne_missile_streak.m2",
+    "spells/7fx_paladin_judgement_missile.m2",
+    "spells/7fx_mage_aegwynnsascendance_statehand.m2",
+    "SPELLS/Monk_ForceSpere_Orb.m2",
+}
+
+local mymodels_ouf_player = {
+    "spells/7fx_nightmare_dustcloud_state.m2",
+    "spells/7fx_ghost_red_state.m2",
+    "spells/acidburn_red.m2",
+    "spells/7fx_ghost_blue_state.m2",
+    "spells/acidburn_blue.m2",
+    "spells/algalonsparkles.m2",
+    "spells/enchantments/greenflame_low.m2",
+    "spells/enchantments/blueflame_low.m2",
+    "spells/enchantments/purpleflame_low.m2",
+    "spells/enchantments/redflame_low.m2",
+    "spells/Holy_precast_med_hand_simple.m2",
+}
+
+function PrintModelIDs()
+    local f = CreateFrame("PlayerModel", nil, UIParent)
+    for i,path in ipairs(mymodels_nrun) do
+        f:SetModel(path)
+        local id = f:GetModelFileID()
+        local unescapedPath = string.gsub(path,"\\","\\\\")
+        print(string.format('[%d] = "%s"', id, unescapedPath))
+    end
+end
+
 -- local f = CreateFrame"Frame"
 -- f:RegisterEvent("UPDATE_CHAT_WINDOWS")
 -- f:RegisterEvent("PLAYER_LOGIN")
@@ -343,7 +414,8 @@ function addon:DoMain()
         f:SetHeight(400)
 
         -- /script ChiSphere_Frame:Show(); ChiSphere_Frame.blink:Play()
-        f:SetModel("SPELLS/Monk_ForceSpere_Orb.m2")
+        -- [610172] = "SPELLS/Monk_ForceSpere_Orb.m2"
+        f:SetModel(610172)
         f:SetModelScale(.05)
         f:SetPosition(0.16,0.16,0)
 
