@@ -9,6 +9,7 @@ Libs\LibSharedMedia-3.0\lib.xml
 
 Bindings.xml
 BindingsTable.lua
+MacroTable.lua
 CVars.lua
 NugCustom.lua
 Profiling.lua
