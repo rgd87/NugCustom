@@ -266,3 +266,74 @@ AddMacro("GENERAL", "tot_penance", "Spell_Arcane_Invocation", TargetOfTargetMous
 
 
 end
+
+
+if playerClass == "DRUID" then
+
+AddMacro("DRUID", "bearform", questionMark,
+[[
+#showtooltip spell:5487
+/cast [noform:1] spell:5487
+/cast [form:1] spell:22842
+]])
+
+AddMacro("DRUID", "cancelform", 136116,
+[[
+/cancelform
+]])
+
+AddMacro("DRUID", "decurse", questionMark, MouseoverSpell(2782))
+AddMacro("DRUID", "dispel", questionMark, MouseoverSpell(88423))
+AddMacro("DRUID", "ironbark", questionMark, MouseoverSpell(102342))
+AddMacro("DRUID", "lblom", questionMark, MouseoverSpell(33763))
+AddMacro("DRUID", "swiftment", questionMark, MouseoverSpell(18562))
+AddMacro("DRUID", "wgrowth", questionMark, MouseoverSpell(48438))
+AddMacro("DRUID", "regrowth", questionMark, MouseoverSpell(8936))
+AddMacro("DRUID", "Rej", questionMark, MouseoverSpell(774))
+AddMacro("DRUID", "shield", questionMark, MouseoverSpell(102351))
+
+AddMacro("DRUID", "stealth", 132299,
+[[
+#showtooltip
+#show spell:5215
+/dismount
+/cast [noform:2] !spell:768
+/cast [modifier:shift] spell:5215
+/cast [form:2, nostealth] spell:5215
+]])
+--5215 - prowl
+--768 - cat form
+
+AddMacro("DRUID", "mangle", questionMark,
+[[
+/dismount [mounted]
+/cast Походный облик
+]])
+
+end
+
+if playerClass == "PALADIN" then
+AddMacro("PALADIN", "beac", questionMark, MouseoverSpell(53563))
+AddMacro("PALADIN", "bestow", questionMark, MouseoverSpell(223306))
+AddMacro("PALADIN", "bop", questionMark, MouseoverSpell(1022))
+AddMacro("PALADIN", "Cleanse", questionMark, MouseoverSpell(4987))
+AddMacro("PALADIN", "CnRet", questionMark, MouseoverSpell(213644))
+AddMacro("PALADIN", "FoL", questionMark, MouseoverSpell(19750))
+AddMacro("PALADIN", "glory", questionMark, MouseoverSpell(210191))
+AddMacro("PALADIN", "HL", questionMark, MouseoverSpell(82326))
+AddMacro("PALADIN", "prism", questionMark, MouseoverSpell(114165))
+AddMacro("PALADIN", "sacrifice", questionMark, MouseoverSpell(6940))
+AddMacro("PALADIN", "sh", questionMark, MouseoverSpell(20473))
+AddMacro("PALADIN", "martyr", questionMark, MouseoverSpell(183998))
+AddMacro("PALADIN", "ofShock", 1373912, "#showtooltip\n/cast [@target,harm] spell:20473")
+end
+
+if playerClass == "DEATHKNIGHT" then
+AddMacro("DEATHKNIGHT", "bres", questionMark, MouseoverSpell(61999))
+AddMacro("DEATHKNIGHT", "dndself", questionMark, "#showtooltip\n/cast [@player] spell:43265")
+AddMacro("DEATHKNIGHT", "graspself", questionMark, "#showtooltip\n/cast [@player] spell:108199")
+end
+
+if playerClass == "HUNTER" then
+AddMacro("HUNTER", "misd", questionMark, "#showtooltip\n/cast [@mouseover] spell:34477")
+end
