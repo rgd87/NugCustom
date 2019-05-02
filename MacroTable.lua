@@ -71,6 +71,13 @@ local questionMark = "INV_MISC_QUESTIONMARK" -- 134400
 
 local _, playerClass = UnitClass("player")
 
+AddMacro("GENERAL", "AurasSelf", 136094, "/nrun listauras player")
+AddMacro("GENERAL", "AurasTarget", 136225, "/nrun listauras target")
+AddMacro("GENERAL", "deleter", 136133, "/script DeleteCursorItem()")
+
+
+
+
 if playerClass == "MONK" then
 
 AddMacro("MONK", "detox", questionMark, MouseoverSpell(115450))
