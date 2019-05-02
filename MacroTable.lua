@@ -337,3 +337,7 @@ end
 if playerClass == "HUNTER" then
 AddMacro("HUNTER", "misd", questionMark, "#showtooltip\n/cast [@mouseover] spell:34477")
 end
+
+if playerClass == "WARLOCK" then
+AddMacro("WARLOCK", "SS", questionMark, MouseoverSpell(20707))
+end
