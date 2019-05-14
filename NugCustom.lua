@@ -13,7 +13,11 @@ _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
 _G.BINDING_HEADER_NUGCUSTOM = addonName
 
-
+-- function d87add:UNIT_HEALTH(event, unit)
+--     if unit ~= "player" then return end
+--     print(UnitHealth(unit))
+-- end
+-- d87add:RegisterEvent("UNIT_HEALTH")
 
 local mymodels_ncb = {
     "spells\\gouge_precast_state_hand.m2",

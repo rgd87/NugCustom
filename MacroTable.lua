@@ -341,3 +341,15 @@ end
 if playerClass == "WARLOCK" then
 AddMacro("WARLOCK", "SS", questionMark, MouseoverSpell(20707))
 end
+
+if playerClass == "SHAMAN" then
+AddMacro("SHAMAN", "cleanse", questionMark, MouseoverSpell(51886))
+AddMacro("SHAMAN", "purify", questionMark, MouseoverSpell(77130))
+AddMacro("SHAMAN", "surge", questionMark, MouseoverSpell(8004))
+AddMacro("SHAMAN", "splink", questionMark, MouseoverSpell(98008))
+AddMacro("SHAMAN", "cheal", questionMark, MouseoverSpell(1064))
+AddMacro("SHAMAN", "hwave", questionMark, MouseoverSpell(77472))
+AddMacro("SHAMAN", "riptide", questionMark, MouseoverSpell(61295))
+AddMacro("SHAMAN", "unleash", questionMark, MouseoverSpell(73685))
+AddMacro("SHAMAN", "eshield", questionMark, MouseoverSpell(974))
+end
