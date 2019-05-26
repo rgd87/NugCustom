@@ -147,6 +147,14 @@ local cvars = {
 	SpellQueueWindow	= "95",
 }
 
+local isClassic = select(4,GetBuildInfo()) <= 19999
+if isClassic then
+	cvars.displaySpellActivationOverlays = nil
+	cvars.spellActivationOverlayOpacity = nil
+	cvars.threatShowNumeric = nil
+	cvars.nameplateShowSelf = nil
+end
+
 function addon:FixCVars()
 	SetAutoDeclineGuildInvites(true)
 	-- ShowAccountAchievements(true) -- show ONLY account achievements

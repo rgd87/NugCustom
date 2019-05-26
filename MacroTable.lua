@@ -1,5 +1,9 @@
 local addonName, addon = ...
 
+
+local isClassic = select(4,GetBuildInfo()) <= 19999
+if isClassic then return end
+
 local macroTable = {}
 addon.macroTable = macroTable
 
@@ -9,20 +13,27 @@ local function AddMacro(class, name, icon, body)
         macroTable[class] = {}
         tbl = macroTable[class]
     end
-    table.insert(tbl, { name, icon, body })
+    if body then 
+        table.insert(tbl, { name, icon, body })
+    end
 end
 addon.AddMacro = AddMacro
 
 local mouseoverTemplate = "#showtooltip\n/cast [@mouseover,help][help][@player] %s"
 local totTemplate = "#showtooltip %s\n/cast [@mouseovertarget,exists,harm][@target,exists,harm][@targettarget,harm] "
 local function MouseoverSpell(spellID)
-    return string.format(mouseoverTemplate, GetSpellInfo(spellID))
+    local spellName = GetSpellInfo(spellID)
+    if not spellName then return print("Spell",spellID,"does not exist") end
+    return string.format(mouseoverTemplate, spellName)
 end
 local function TargetOfTargetMouseoverSpell(spellID)
     local spellName = GetSpellInfo(spellID)
+    if not spellName then return print("Spell",spellID,"does not exist") end
     return string.format(totTemplate, spellName, spellName)
 end
 local function StartAttackSpell(spellID)
+    local spellName = GetSpellInfo(spellID)
+    if not spellName then return print("Spell",spellID,"does not exist") end
     return string.format("#showtooltip\n/startattack\n/cast %s", GetSpellInfo(spellID))
 end
 
