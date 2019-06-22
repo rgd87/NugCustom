@@ -218,7 +218,7 @@ function addon:MoveChat()
     ChatFrame1:ClearAllPoints()
     ChatFrame1:SetWidth(432);
     ChatFrame1:SetHeight(408);
-    
+
     ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 32)
 
     ChatFrame1.isInitialized = 1;
@@ -351,9 +351,9 @@ function addon:DoMain()
 
 
     local _, class = UnitClass("player")
-    -- if class == "WARLOCK" 
+    -- if class == "WARLOCK"
 
-    
+
         -- local f = CreateFrame("Model", "FnB_Frame", UIParent)
         -- local f = CreateFrame("PlayerModel", "FnB_Frame", UIParent)
         -- f:SetWidth(500)
@@ -552,7 +552,7 @@ function addon:DoMain()
     -- end
 
 
--- 
+--
     -- if select(2,UnitClass("player")) == "WARLOCK" then
         -- SPM = CreateFrame("Button","SPM",UIParent,"SecureActionButtonTemplate")
         -- SPM:SetAttribute("type1","macro")
@@ -676,7 +676,7 @@ function d87add:MakeAzeriteThing()
         local isAzeriteEmpowered = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(itemID)
         if isAzeriteEmpowered then
             local allTierInfo = C_AzeriteEmpoweredItem.GetAllTierInfoByItemID(itemID)
-            
+
             -- print(itemID)
             -- d87add.dump(allTierInfo)
 
@@ -692,7 +692,7 @@ function d87add:MakeAzeriteThing()
                 self:AddLine(" ")
                 local numLines = self:NumLines()
                 local newLine = _G[self:GetName().."TextLeft"..numLines]
-                
+
                 self:AddLine(" ")
 
                 local tierUnlockLevel = tier.unlockLevel
@@ -731,7 +731,7 @@ end
 --     if not InCombatLockdown() then
 --         MainMenuBar:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 0);
 --     end
---     MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0); 
+--     MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0);
 --     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0);
 -- end)
 
@@ -743,6 +743,7 @@ function d87add.PLAYER_LOGIN()
 
     -- addon:TestScrollFrameOnModels()
     -- addon:TestSetTransform()
+    -- addon:Test82Models()
 
     if Confused then
         -- local PTR_IssueReporter = Confused:GetParent()
@@ -765,7 +766,7 @@ function d87add.PLAYER_LOGIN()
         ObjectiveTracker_Collapse()
     end
 
-    
+
     -- MainMenuBar:ClearAllPoints()
     -- MainMenuBar:SetPoint("CENTER", UIParent, "CENTER",0,0)
     -- -- StatusTrackingBarManager:HideStatusBars()
@@ -822,7 +823,7 @@ function d87add.PLAYER_LOGIN()
     --     UpdateContainerFrameAnchors();
     -- end)
 
-    
+
 end
 
 
@@ -1064,7 +1065,7 @@ end)
 
 
 function GetScaleFactor()
-    
+
     local screenResolution = ({GetScreenResolutions()})[GetCurrentResolution()]
     local screenWidth, screenHeight = strsplit("x", screenResolution)
     local scale = 768/screenHeight -- This is the scale factor that will scale textures to the native resolution that the client uses internally... Or so I believe
@@ -1110,10 +1111,10 @@ end
 function addon:TestScrollFrameOnModels()
     local Redraw = function(self)
         if not self.model_path then return end
-    
+
         self:SetModelScale(1)
         self:SetPosition(0,0,0)
-    
+
         if type(self.model_path) == "number" then
             self:SetDisplayInfo(self.model_path)
         else
@@ -1122,28 +1123,28 @@ function addon:TestScrollFrameOnModels()
         self:SetModelScale(self.model_scale)
         self:SetPosition(self.ox, self.oy, self.oz)
     end
-    
+
     local ResetTransformations = function(self)
         self:SetModelScale(1)
         self:SetPosition(0,0,0)
     end
-    
+
     local MakeModelRegion = function(self,w,h,model_path, x,y,z)
         local pmf = CreateFrame("PlayerModel", nil, self )
         pmf:SetSize(w,h)
-    
+
         pmf.model_scale = 1
         pmf.ox = x
         pmf.oy = y
         pmf.oz = z
         pmf.model_path = model_path
-    
+
         pmf:SetScript("OnHide", ResetTransformations)
         pmf:SetScript("OnShow", Redraw)
         pmf.Redraw = Redraw
         pmf.ResetTransformations = ResetTransformations
         pmf:Redraw()
-    
+
         return pmf
     end
     -- local root = CreateFrame("Frame", "NugCustomTestRoot", UIParent)
@@ -1177,7 +1178,7 @@ function addon:TestScrollFrameOnModels()
     sf:SetScrollChild(f)
     sf:SetSize(f:GetWidth(), f:GetHeight())
     sf:SetPoint("CENTER",0,0)
-    
+
 
     f:SetPoint("CENTER",0,0)
 
@@ -1189,7 +1190,7 @@ end
 function addon:TestSetTransform()
     local Redraw = function(self)
         if not self.model_path then return end
-    
+
         if type(self.model_path) == "number" then
             self:SetDisplayInfo(self.model_path)
         else
@@ -1197,18 +1198,18 @@ function addon:TestSetTransform()
         end
         self:SetTransform(unpack(self.transformations))
     end
-    
+
     local ResetTransformations = function(self)
         self:ClearTransform()
     end
-    
+
     local MakeModelRegion = function(self,w,h,model_path, ...)
         local pmf = CreateFrame("PlayerModel", nil, self )
         pmf:SetSize(w,h)
-    
+
         pmf.transformations = { ... }
         pmf.model_path = model_path
-    
+
         -- before 8.0 this was a required workaround for a bug
         -- that made models disappear after opening fullscreen map or entering cutscene
         pmf:SetScript("OnHide", ResetTransformations)
@@ -1216,7 +1217,7 @@ function addon:TestSetTransform()
         pmf.Redraw = Redraw
         pmf.ResetTransformations = ResetTransformations
         pmf:Redraw()
-    
+
         return pmf
     end
 
@@ -1254,4 +1255,48 @@ function addon:TestSetTransform()
     -- TransformTestModel:SetScale(2)
     -- frame scales, model doesnt, but if you manually multiply
     -- offsets and model scale by frame scale it'll catch up
+end
+
+function addon:Test82Models()
+    local Redraw = function(self)
+        if not self.model_path then return end
+
+        self:SetModelScale(1)
+        self:SetPosition(0,0,0)
+
+        self:SetModel(self.model_path)
+
+        self:SetModelScale(self.model_scale)
+        self:SetPosition(self.ox, self.oy, self.oz)
+    end
+
+    local ResetTransformations = function(self)
+        self:SetModelScale(1)
+        self:SetPosition(0,0,0)
+    end
+
+    local MakeModelRegion = function(self,w,h,model_path, x,y,z)
+        local pmf = CreateFrame("PlayerModel", nil, self )
+        pmf:SetSize(w,h)
+
+        pmf.model_scale = 1
+        pmf.ox = x
+        pmf.oy = y
+        pmf.oz = z
+        pmf.model_path = model_path
+
+        pmf:SetScript("OnHide", ResetTransformations)
+        pmf:SetScript("OnShow", Redraw)
+        pmf.Redraw = Redraw
+        pmf.ResetTransformations = ResetTransformations
+        pmf:Redraw()
+
+        return pmf
+    end
+
+    local is82 = select(4,GetBuildInfo()) > 80100
+
+    local ambientSmoke = MakeModelRegion(nil, 200, 200, is82 and 165535 or "spells/acidburn_blue.m2", 0,0,1 )
+    -- ambientSmoke:SetPoint("TOP", f, "TOP", 0, 0)
+    ambientSmoke:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 end
