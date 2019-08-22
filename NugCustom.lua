@@ -2,6 +2,7 @@ local addonName, addon = ...
 
 local d87add = CreateFrame("Frame", "d87add")
 
+local isClassic = select(4,GetBuildInfo()) <= 19999
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
@@ -124,7 +125,6 @@ end
 --
 -- local circle = CreateCircleFrame()
 
-
 CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA = 0;
 CHAT_FRAME_FADE_OUT_TIME = 0.5;
 
@@ -214,18 +214,28 @@ function addon:KuiProfileSwapper()
 end
 
 function addon:MoveChat()
-    ChatFrame1:SetClampedToScreen(false)
-    ChatFrame1:ClearAllPoints()
-    ChatFrame1:SetWidth(432);
-    ChatFrame1:SetHeight(408);
+    for i=1,2 do
+        local cf = _G["ChatFrame"..i]
+        cf:SetClampedToScreen(false)
+        cf:ClearAllPoints()
+        cf:SetWidth(432);
+        cf:SetHeight(408);
 
-    ChatFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 32)
+        cf:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 32)
 
-    ChatFrame1.isInitialized = 1;
-    FCF_SetWindowColor(ChatFrame1, 0,0,0);
-    FCF_SetWindowAlpha(ChatFrame1, 0);
-    FCF_SavePositionAndDimensions(ChatFrame1)
-    FCF_SetLocked(ChatFrame1, true)
+        cf.isInitialized = 1;
+        if i == 1 then
+        FCF_SetWindowColor(cf, 0,0,0);
+        FCF_SetWindowAlpha(cf, 0);
+        FCF_SavePositionAndDimensions(cf)
+        FCF_SetLocked(cf, true)
+        end
+    end
+
+    -- Blizzard_CombatLog_CurrentSettings.settings.timestamp = true
+    -- CombatLogQuickButtonFrame_Custom:ClearAllPoints()
+    -- CombatLogQuickButtonFrame_Custom:SetPoint("BOTTOMLEFT", COMBATLOG:GetName() .. "TabRight", "BOTTOMLEFT", 20, 0)
+    -- CombatLogQuickButtonFrame_Custom:SetPoint("BOTTOMRIGHT", COMBATLOG, "TOPRIGHT")
 end
 
 
@@ -261,6 +271,18 @@ end
 -- function d87add:VOICE_CHAT_CHANNEL_MEMBER_SPEAKING_STATE_CHANGED(event, memberID, channelID, isSpeaking)
 --     print(memberID, channelID, isSpeaking)
 -- end
+function glowUnit(unit)
+    local LGF = LibStub("LibGetFrame-1.0")
+    local LCG = LibStub("LibCustomGlow-1.0")
+    local frames = LGF.GetFrame(unit, { returnAll = true })
+    LGFFRAMES = frames
+    if frames then
+        for frame, frameName in pairs(frames) do
+            print(frame, frameName)
+            LCG.PixelGlow_Start(frame, nil, 8, 0.5, 6, 1.5) --LCG.ButtonGlow_Stop(frame)
+        end
+    end
+end
 
 
 function addon:DoMain()
@@ -274,6 +296,17 @@ function addon:DoMain()
     -- SetupTimestamps()
     addon:KuiProfileSwapper()
     addon:MoveChat()
+
+    local reclamp = function(self)
+        GameTooltip:SetClampedToScreen(true)
+    end
+    -- GameTooltip:HookScript("OnShow", reclamp)
+    hooksecurefunc(GameTooltip, "SetInventoryItem", reclamp)
+    hooksecurefunc(GameTooltip, "SetBagItem", reclamp)
+    hooksecurefunc(GameTooltip, "SetItemByID", reclamp)
+    hooksecurefunc(GameTooltip, "SetInventoryItemByID", reclamp)
+
+
 
     -- C_Timer.After(10, MoveChat)
 
@@ -595,8 +628,6 @@ end
 -- end
 
 
-
-
 function d87add.Clear()
     local t = {}
     for i=1,30 do
@@ -735,11 +766,17 @@ end
 --     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0);
 -- end)
 
+local playerLoginTime = 0
 
 d87add:RegisterEvent("PLAYER_LOGIN");
 function d87add.PLAYER_LOGIN()
+    playerLoginTime = GetTime()
+
     addon:DoMain()
     addon:FixCVars()
+    if not isClassic then
+        addon:ModObjectiveTracker()
+    end
 
     -- addon:TestScrollFrameOnModels()
     -- addon:TestSetTransform()
@@ -760,72 +797,232 @@ function d87add.PLAYER_LOGIN()
     end
 
     -- d87add:MakeAzeriteThing()
+end
 
-
+function addon:ModObjectiveTracker()
     if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
-        ObjectiveTracker_Collapse()
+        C_Timer.After(3, function()
+            OBJECTIVE_TRACKER_TEXT_WIDTH  = 400 - 12
+            DEFAULT_OBJECTIVE_TRACKER_MODULE.lineWidth = OBJECTIVE_TRACKER_TEXT_WIDTH;
+
+            local blocksFrame = DEFAULT_OBJECTIVE_TRACKER_MODULE.BlocksFrame
+            local blocks = { blocksFrame:GetChildren() }
+            table.insert(blocks, ScenarioObjectiveBlock)
+            SCENARIO_TRACKER_MODULE.BlocksFrame:SetWidth(400)
+            for i, block in ipairs(blocks) do
+                if block.lines then
+                    block.lineWidth = OBJECTIVE_TRACKER_TEXT_WIDTH
+                    for objectiveKey, line in pairs(block.lines) do
+                        if ( block.lineWidth ~= line.width ) then
+                            line:SetWidth(block.lineWidth)
+                            line.Text:SetWidth(block.lineWidth);
+                            line.Text:SetHeight(0);
+                            line.Text:SetWordWrap(true)
+                            line.Text:SetNonSpaceWrap(true);
+                            line.width = block.lineWidth;	-- default should be nil
+                        end
+                    end
+                else
+
+                end
+            end
+
+            hooksecurefunc(DEFAULT_OBJECTIVE_TRACKER_MODULE, "AddObjective", function(self, block, objectiveKey, text, lineType, useFullHeight, dashStyle, colorStyle, adjustForNoText, overrideHeight)
+                local line = self:GetLine(block, objectiveKey, lineType);
+                line.Text:SetHeight(0);
+            end)
+            -- hooksecurefunc(SCENARIO_TRACKER_MODULE, "AddObjective", function(self, block, objectiveKey, text, lineType, useFullHeight, dashStyle, colorStyle, adjustForNoText, overrideHeight)
+            --     local line = self:GetLine(block, objectiveKey, lineType);
+            --     line.Text:SetHeight(0);
+            -- end)
+
+            ObjectiveTrackerFrame:SetWidth(400)
+            -- ObjectiveTrackerFrame:SetHeight(600)
+            -- ObjectiveTrackerFrame:ClearAllPoints()
+            -- ObjectiveTrackerFrame:SetPoint("TOPLEFT", 300, -100)
+
+
+
+        end)
+        -- ObjectiveTrackerFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 300, -100)
+        -- ObjectiveTrackerFrame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 300, 300)
+
+        -- ObjectiveTracker_Collapse()
     end
 
 
-    -- MainMenuBar:ClearAllPoints()
-    -- MainMenuBar:SetPoint("CENTER", UIParent, "CENTER",0,0)
-    -- -- StatusTrackingBarManager:HideStatusBars()
-    -- -- StatusTrackingBarManager.GetNumberVisibleBars = function() return 0 end
 
-    -- MainMenuBar:SetPositionForStatusBars()
+    hooksecurefunc("QuestObjectiveSetupBlockButton_AddRightButton", function(block, button, initialAnchorOffsets)
+        button:ClearAllPoints();
+
+        local isGroupFinderButton = block.groupFinderButton == button
+
+        local paddingBetweenButtons = block.module.paddingBetweenButtons or 0;
+
+        -- if block.rightButton then
+        --     button:SetPoint("TOP", block.rightButton, "BOTTOM", 0, -paddingBetweenButtons);
+        -- else
+            initialAnchorOffsets = initialAnchorOffsets or {0,0};
+            -- print(initialAnchorOffsets[1], )
+        if isGroupFinderButton then
+            button:SetPoint("TOPRIGHT", block, "TOPLEFT", -10, 0);
+        else
+            button:SetPoint("TOPRIGHT", block, "TOPLEFT", -30, 0);
+        end
+        -- end
+    end)
 
 
-    -- if (IsAddOnLoaded("Dominos")) then
-    --     MainMenuBarArtFrame:SetParent(UIParent)
-    --     MainMenuBarArtFrame:SetFrameStrata("LOW")
-
-    --     -- MainMenuBarRightEndCap:SetParent(MainMenuBarArtFrame)
-    --     -- MainMenuBarLeftEndCap:SetParent(MainMenuBarArtFrame)
-
-    --     MainMenuBarArtFrame:ClearAllPoints()
-    --     MainMenuBarArtFrame:SetWidth(1024)
-    --     MainMenuBarArtFrame:SetHeight(53)
-    --     MainMenuBarArtFrame:SetPoint("BOTTOM",UIParent,"BOTTOM",0,0)
 
 
-    --     MainMenuBarMaxLevelBar:SetParent(MainMenuBarArtFrame)
-    --     MainMenuBarMaxLevelBar:SetPoint("TOP", MainMenuBarArtFrame, "TOP", 0,-11)
-    --     MainMenuBarMaxLevelBar.SetPoint = function() end
-    --     MainMenuBarMaxLevelBar.SetParent = function() end
+    hooksecurefunc("AutoQuestPopupTracker_AddPopUp", function(questID, popUpType, itemID)
+        if InterfaceLayer then
+            InterfaceLayer:TempActivation()
+        end
+    end)
 
-    --     MainMenuExpBar:SetParent(MainMenuBarArtFrame)
-    --     ReputationWatchBar:SetParent(MainMenuBarArtFrame)
 
+    local questProgressBars = {}
+    local scenarioPercent = 999
+
+    hooksecurefunc("BonusObjectiveTrackerProgressBar_SetValue", function(self, percent)
+        local questID = self.questID
+        local oldPercent = questProgressBars[questID]
+        if percent ~= oldPercent then
+            local description = ""
+            local isInArea, isOnMap, numObjectives, taskName, displayAsObjective = GetTaskInfo(questID);
+            for objectiveIndex = 1, numObjectives do
+                local text, objectiveType, finished = GetQuestObjectiveInfo(questID, objectiveIndex, false)
+                if objectiveType == "progressbar" then
+                    description = text
+                    break
+                end
+            end
+            -- print("[bonus] update on", questID)
+
+            if playerLoginTime + 3 < GetTime() then
+                UIErrorsFrame:AddMessage(string.format("%s: %d%%", description, percent), YELLOW_FONT_COLOR:GetRGB());
+            end
+
+            questProgressBars[questID] = percent
+        end
+    end)
+
+    hooksecurefunc("ObjectiveTrackerProgressBar_SetValue", function(self, percent)
+        local questID = self.questID
+        local oldPercent = questProgressBars[questID]
+        if percent ~= oldPercent then
+            local description = ""
+            local questLogIndex = GetQuestLogIndexByID(questID)
+            local numObjectives = GetNumQuestLeaderBoards(questLogIndex)
+            for objectiveIndex = 1, numObjectives do
+                local text, objectiveType, finished = GetQuestLogLeaderBoard(objectiveIndex, questLogIndex);
+                if objectiveType == "progressbar" then
+                    description = text
+                    break
+                end
+            end
+
+            if playerLoginTime + 3 < GetTime() then
+                UIErrorsFrame:AddMessage(string.format("%s: %d%%", description, percent), YELLOW_FONT_COLOR:GetRGB());
+            end
+
+            questProgressBars[questID] = percent
+        end
+    end)
+
+
+    hooksecurefunc("ScenarioTrackerProgressBar_SetValue", function(self, percent)
+        if percent ~= scenarioPercent then
+            -- local _, _, difficulty, _, _, _, _, _ = GetInstanceInfo();
+            -- local description = difficulty == 8 and "Mythic+" or "Scenario"
+            local description = "Scenario"
+
+            local stageName, stageDescription, numCriteria, _, _, _, _, numSpells, spellInfo, weightedProgress, _, widgetSetID = C_Scenario.GetStepInfo();
+            for criteriaIndex = 1, numCriteria do
+                local criteriaString, criteriaType, completed, quantity, totalQuantity, flags, assetID, quantityString, criteriaID, duration, elapsed, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex);
+
+                if isWeightedProgress then -- means that's the bar criteria
+                    description = criteriaString
+                    -- percent = quantity/totalQuantity
+                end
+            end
+
+            if playerLoginTime + 3 < GetTime() then
+                UIErrorsFrame:AddMessage(string.format("%s: %.1f%%", description, percent), YELLOW_FONT_COLOR:GetRGB());
+            end
+
+            scenarioPercent = percent
+        end
+    end)
+
+
+
+    -- -- SCENARIO (MYTHIC+)
+    -- local stageName, stageDescription, numCriteria, _, _, _, _, numSpells, spellInfo, weightedProgress, _, widgetSetID = C_Scenario.GetStepInfo();
+    -- for criteriaIndex = 1, numCriteria do
+    --     local criteriaString, criteriaType, completed, quantity, totalQuantity, flags, assetID, quantityString, criteriaID, duration, elapsed, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex);
+
+    --     if isWeightedProgress then -- means that's the bar criteria
+    --         -- asd
+    --     end
     -- end
 
-    -- /dump NugCustomScrollFrame:SetHorizontalScroll(50)
+    -- -- NORMAL QUESTS
+    -- 55520
+	-- for i = 1, GetNumQuestWatches() do
+    --     local questID, title, questLogIndex, numObjectives, requiredMoney, isComplete, startEvent, isAutoComplete, failureTime, timeElapsed, questType, isTask, isBounty, isStory, isOnMap, hasLocalPOI, isHidden, isWarCampaign, hasOverrideSort = GetQuestWatchInfo(i);
+            -- local questLogIndex = GetQuestLogIndexByID(questID)
+    --     for objectiveIndex = 1, numObjectives do
+    --         local text, objectiveType, finished = GetQuestLogLeaderBoard(objectiveIndex, questLogIndex);
 
+    --         print(text, objectiveType, finished)
+    --     end
+    --     -- print(GetQuestLogLeaderBoard(questID, objectiveIndex, true))
+    -- end
+    -- print("--------------")
 
-    -- MultiBarBottomLeft:SetParent(UIParent)
-    -- MultiBarBottomRight:SetParent(UIParent)
-    -- MainMenuBarVehicleLeaveButton:SetParent(UIParent)
+    -- -- WORLD QUESTS
+    -- for i = 1, GetNumWorldQuestWatches() do
+    --     local questID = GetWorldQuestWatchInfo(i)
 
-    ------- Disable Legion Exp bar and artifact bar
-    -- hooksecurefunc("MainMenuBar_UpdateExperienceBars", function()
-    --     MainMenuExpBar:Hide();
-    --     MainMenuExpBar.pauseUpdates = true;
-    --     ExhaustionTick:Hide();
-
-    --     ArtifactWatchBar:Hide();
-
-    --     HonorWatchBar:Hide();
-
-    --     ReputationWatchBar:Hide();
-
-    --     MainMenuBarMaxLevelBar:Show(); --cap
-
-    --     UIParent_ManageFramePositions();
-    --     UpdateContainerFrameAnchors();
-    -- end)
-
-
+    --     local isInArea, isOnMap, numObjectives, taskName, displayAsObjective = GetTaskInfo(questID);
+    --     for objectiveIndex = 1, numObjectives do
+    --         local text, objectiveType, finished = GetQuestObjectiveInfo(questID, objectiveIndex, false)
+    --         print(text, objectiveType, finished)
+    --     end
+	-- end
 end
 
+-- MainMenuBar:SetMovable(true)
+-- MainMenuBar:SetUserPlaced(true)
+-- MainMenuBar:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 0);
+
+-- hooksecurefunc(MainMenuBar, "SetPositionForStatusBars", function(self)
+--     StatusTrackingBarManager:HideStatusBars()
+--     if not InCombatLockdown() then
+--         MainMenuBar:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 0);
+--     end
+--     MainMenuBarArtFrame.LeftEndCap:SetPoint("BOTTOMLEFT", MainMenuBar, -98, 0);
+--     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0);
+-- end)
+
+function addon:DisableLegionExpBar()
+    ------- Disable Legion Exp bar and artifact bar
+    hooksecurefunc("MainMenuBar_UpdateExperienceBars", function()
+        MainMenuExpBar:Hide();
+        MainMenuExpBar.pauseUpdates = true;
+        ExhaustionTick:Hide();
+
+        ReputationWatchBar:Hide();
+
+        MainMenuBarMaxLevelBar:Show(); --cap
+
+        UIParent_ManageFramePositions();
+        UpdateContainerFrameAnchors();
+    end)
+end
+addon:DisableLegionExpBar()
 
 do
     local hour, minute = 3600, 60
@@ -1300,3 +1497,129 @@ function addon:Test82Models()
     -- ambientSmoke:SetPoint("TOP", f, "TOP", 0, 0)
     ambientSmoke:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 end
+
+
+-- -- copy from SecureGroupHeaders.lua
+-- local function GetGroupHeaderType(self)
+--     local kind, start, stop;
+
+--     local nRaid = GetNumGroupMembers();
+--     local nParty = GetNumSubgroupMembers();
+--     if ( IsInRaid() and self:GetAttribute("showRaid") ) then
+--         kind = "RAID";
+--     elseif ( IsInGroup() and self:GetAttribute("showParty") ) then
+--         kind = "PARTY";
+--     elseif ( self:GetAttribute("showSolo") ) then
+--         kind = "SOLO";
+--     end
+--     if ( kind ) then
+--         if ( kind == "RAID" ) then
+--             start = 1;
+--             stop = nRaid;
+--         else
+--             if ( kind == "SOLO" or self:GetAttribute("showPlayer") ) then
+--                 start = 0;
+--             else
+--                 start = 1;
+--             end
+--             stop = nParty;
+--         end
+--     end
+--     return kind, start, stop;
+-- end
+
+-- local function GetGroupRosterInfo(kind, index)
+--     local _, unit, name, subgroup, className, role, server, assignedRole;
+--     if ( kind == "RAID" ) then
+--         unit = "raid"..index;
+--         name, _, subgroup, _, _, className, _, _, _, role, _, assignedRole = GetRaidRosterInfo(index);
+--     else
+--         if ( index > 0 ) then
+--             unit = "party"..index;
+--         else
+--             unit = "player";
+--         end
+--         if ( UnitExists(unit) ) then
+--             name, server = UnitName(unit);
+--             if (server and server ~= "") then
+--                 name = name.."-"..server
+--             end
+--             _, className = UnitClass(unit);
+--             if ( GetPartyAssignment("MAINTANK", unit) ) then
+--                 role = "MAINTANK";
+--             elseif ( GetPartyAssignment("MAINASSIST", unit) ) then
+--                 role = "MAINASSIST";
+--             end
+--             assignedRole = UnitGroupRolesAssigned(unit)
+--         end
+--         subgroup = 1;
+--     end
+--     return unit, name, subgroup, className, role, assignedRole;
+-- end
+
+-- hooksecurefunc("SecureGroupHeader_Update", function(self)
+--     local headerName = self:GetName()
+--     if headerName ~= "TestGH" then return end
+
+--     print(GetTime(), "SecureGroupHeader_Update", self:GetName())
+--     local kind, start, stop = GetGroupHeaderType(self);
+--     if kind then
+--         for i = start, stop, 1 do
+--             local unit, name, subgroup, className, role, assignedRole = GetGroupRosterInfo(kind, i);
+
+--             print(unit, name, subgroup, className, role, assignedRole)
+--         end
+--     end
+-- end)
+
+-- local hdr = CreateFrame("Frame", "TestGH", UIParent, "SecureGroupHeaderTemplate")
+-- hdr:SetAttribute("template", "SecureUnitButtonTemplate")
+-- hdr:SetAttribute("showRaid", true)
+-- hdr:SetAttribute("showParty", true)
+-- hdr:SetAttribute("showSolo", true)
+-- hdr:SetAttribute("point", "LEFT")
+-- hdr:SetAttribute("xOffset", 5)
+-- hdr:SetAttribute("yOffset", 5)
+-- hdr:Show()
+-- -- hdr:SetAttribute("groupFilter", "1,2,3,4,5,6,7,8")
+
+-- hdr.SetupUnitButton = function(header, frameName)
+--     local frame = _G[frameName]
+--     frame:HookScript("OnAttributeChanged", function(self, attrname, unit)
+--         if attrname == "unit" then
+--             print(GetTime(), "onAttrChanged", self:GetName(), unit)
+--         end
+--     end)
+-- end
+
+-- hdr:SetAttribute("initialConfigFunction", [[
+--     RegisterUnitWatch(self)
+--     local header = self:GetParent()
+--     header:CallMethod("SetupUnitButton", self:GetName())
+-- ]])
+
+-- hdr:SetPoint("CENTER",0,0)
+
+--[[
+<You joined the raid group>
+810572.611 onAttrChanged TestGHUnitButton2 raid6
+810572.611 onAttrChanged TestGHUnitButton3 raid8
+810572.611 onAttrChanged TestGHUnitButton4 raid10
+810572.611 onAttrChanged TestGHUnitButton5 raid15
+810572.611 SecureGroupHeader_Update TestGH
+raid1 Zeberdy-Saurfang 1 HUNTER nil DAMAGER
+raid2 nil 1 nil nil DAMAGER
+raid3 nil 1 nil nil DAMAGER
+raid4 nil 1 nil nil DAMAGER
+raid5 nil 1 nil nil TANK
+raid6 Номка 2 HUNTER nil DAMAGER
+raid7 nil 2 nil nil DAMAGER
+raid8 Терпильник 2 SHAMAN nil DAMAGER
+raid9 nil 2 nil nil HEALER
+raid10 Типвересовой 2 DRUID nil DAMAGER
+raid11 nil 3 nil nil DAMAGER
+raid12 nil 3 nil nil DAMAGER
+raid13 nil 3 nil nil TANK
+raid14 nil 3 nil nil DAMAGER
+raid15 Лунаша 3 MONK nil DAMAGER
+]]

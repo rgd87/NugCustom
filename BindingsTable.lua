@@ -6,7 +6,11 @@ local function FeedBindingTable(t)
             SetBinding(key, command)
         end
     end
-    SaveBindings(2)
+    if SaveBindings then
+        SaveBindings(2)
+    else
+        AttemptToSaveBindings(2)
+    end
 end
 
 function EnsureBindings(doActionBars)
