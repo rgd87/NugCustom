@@ -284,7 +284,6 @@ function glowUnit(unit)
     end
 end
 
-
 function addon:DoMain()
     -- SetCVar("CombatHealing", "1");
     -- SetCVar("violencelevel", 5)	-- [1]
@@ -294,7 +293,9 @@ function addon:DoMain()
     -- SetCVar("WeatherDensity", 3)
 
     -- SetupTimestamps()
-    addon:KuiProfileSwapper()
+    -- if not isClassic then
+        -- addon:KuiProfileSwapper()
+    -- end
     addon:MoveChat()
 
     local reclamp = function(self)
@@ -305,8 +306,6 @@ function addon:DoMain()
     hooksecurefunc(GameTooltip, "SetBagItem", reclamp)
     hooksecurefunc(GameTooltip, "SetItemByID", reclamp)
     hooksecurefunc(GameTooltip, "SetInventoryItemByID", reclamp)
-
-
 
     -- C_Timer.After(10, MoveChat)
 
@@ -1022,7 +1021,9 @@ function addon:DisableLegionExpBar()
         UpdateContainerFrameAnchors();
     end)
 end
-addon:DisableLegionExpBar()
+if isClassic then
+    addon:DisableLegionExpBar()
+end
 
 do
     local hour, minute = 3600, 60
