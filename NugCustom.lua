@@ -238,6 +238,19 @@ function addon:MoveChat()
     -- CombatLogQuickButtonFrame_Custom:SetPoint("BOTTOMRIGHT", COMBATLOG, "TOPRIGHT")
 end
 
+local autoCollapseTimer
+function NugCustom_ToggleObjectiveTracker()
+    ObjectiveTracker_MinimizeButton_OnClick()
+    if not ObjectiveTrackerFrame.collapsed then
+        autoCollapseTimer = C_Timer.NewTimer(40, function()
+            ObjectiveTracker_Collapse()
+        end)
+    else
+        if autoCollapseTimer then
+            autoCollapseTimer:Cancel()
+        end
+    end
+end
 
 
 -- LiteralName = "VOICE_CHAT_CHANNEL_JOINED",
@@ -306,6 +319,10 @@ function addon:DoMain()
     hooksecurefunc(GameTooltip, "SetItemByID", reclamp)
     hooksecurefunc(GameTooltip, "SetInventoryItemByID", reclamp)
 
+    -- local ticker = CreateFrame("Frame", nil)
+    -- ticker:SetScript("OnUpdate", function(self)
+    --     print(GetUnitSpeed("target"))
+    -- end)
 
 
     -- C_Timer.After(10, MoveChat)
@@ -847,7 +864,7 @@ function addon:ModObjectiveTracker()
         -- ObjectiveTrackerFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 300, -100)
         -- ObjectiveTrackerFrame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 300, 300)
 
-        -- ObjectiveTracker_Collapse()
+        ObjectiveTracker_Collapse()
     end
 
 
@@ -1022,7 +1039,9 @@ function addon:DisableLegionExpBar()
         UpdateContainerFrameAnchors();
     end)
 end
-addon:DisableLegionExpBar()
+if isClassic then
+    addon:DisableLegionExpBar()
+end
 
 do
     local hour, minute = 3600, 60
@@ -1384,15 +1403,12 @@ function addon:TestScrollFrameOnModels()
     return sf
 end
 
-function addon:TestSetTransform()
+function d87add:TestSetTransform()
     local Redraw = function(self)
         if not self.model_path then return end
 
-        if type(self.model_path) == "number" then
-            self:SetDisplayInfo(self.model_path)
-        else
-            self:SetModel(self.model_path)
-        end
+        self:SetModel(self.model_path)
+
         self:SetTransform(unpack(self.transformations))
     end
 
@@ -1419,7 +1435,7 @@ function addon:TestSetTransform()
     end
 
 
-    local f = MakeModelRegion(UIParent, 100, 100, "spells/blessingoffreedom_state.m2", 0.0255,0.0255,0, rad(90), rad(270), rad(270), 0.006)
+    local f = MakeModelRegion(UIParent, 100, 100, 165693, 0.0255,0.0255,0, rad(90), rad(270), rad(270), 0.006) -- "spells/blessingoffreedom_state.m2"
     f:SetPoint("CENTER")
     f:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
@@ -1623,3 +1639,51 @@ raid13 nil 3 nil nil TANK
 raid14 nil 3 nil nil DAMAGER
 raid15 Лунаша 3 MONK nil DAMAGER
 ]]
+
+
+
+
+local CreateNormalBar = function(name, parent)
+    local f = CreateFrame("StatusBar", name, parent)
+    return f
+end
+
+local rand = math.random
+function TESTBARS()
+    local b1 = CreateCustomBar("ass1", UIParent)
+    b1:SetStatusBarTexture([[Interface\AddOns\NugRunning\statusbar.tga]])
+    b1:SetMinMaxValues(0, 100)
+    b1:SetWidth(200)
+    b1:SetHeight(30)
+    b1:SetPoint("CENTER", 0,0)
+
+    -- math.randomseed(GetTime())
+
+    local beginTime, endTime
+    beginTime = debugprofilestop();
+
+    for i=1,10000 do
+        b1:SetValue(rand(100))
+    end
+
+    endTime = debugprofilestop();
+    print("Bar1", endTime - beginTime)
+
+
+
+    local b2 = CreateNormalBar("ass2", UIParent)
+    b2:SetStatusBarTexture([[Interface\AddOns\NugRunning\statusbar.tga]])
+    b2:SetMinMaxValues(0, 100)
+    b2:SetSize(200, 30)
+    b2:SetPoint("CENTER", 0,100)
+
+    local beginTime, endTime
+    beginTime = debugprofilestop();
+
+    for i=1,10000 do
+        b2:SetValue(rand(100))
+    end
+
+    endTime = debugprofilestop();
+    print("Bar2", endTime - beginTime)
+end

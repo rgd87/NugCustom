@@ -3,6 +3,6 @@
 		ChatFrame_OpenChat("/5 ")
 	</Binding>
 	<Binding name="NUGCUSTOM_OBJECTIVE_TOGGLE" category="ADDONS">
-		ObjectiveTracker_MinimizeButton_OnClick()
+		NugCustom_ToggleObjectiveTracker()
 	</Binding>
 </Bindings>
