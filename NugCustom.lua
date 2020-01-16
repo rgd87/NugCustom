@@ -297,7 +297,6 @@ function glowUnit(unit)
     end
 end
 
-
 function addon:DoMain()
     -- SetCVar("CombatHealing", "1");
     -- SetCVar("violencelevel", 5)	-- [1]
@@ -307,7 +306,9 @@ function addon:DoMain()
     -- SetCVar("WeatherDensity", 3)
 
     -- SetupTimestamps()
-    addon:KuiProfileSwapper()
+    -- if not isClassic then
+        -- addon:KuiProfileSwapper()
+    -- end
     addon:MoveChat()
 
     local reclamp = function(self)
@@ -318,12 +319,6 @@ function addon:DoMain()
     hooksecurefunc(GameTooltip, "SetBagItem", reclamp)
     hooksecurefunc(GameTooltip, "SetItemByID", reclamp)
     hooksecurefunc(GameTooltip, "SetInventoryItemByID", reclamp)
-
-    -- local ticker = CreateFrame("Frame", nil)
-    -- ticker:SetScript("OnUpdate", function(self)
-    --     print(GetUnitSpeed("target"))
-    -- end)
-
 
     -- C_Timer.After(10, MoveChat)
 
@@ -1640,6 +1635,7 @@ raid14 nil 3 nil nil DAMAGER
 raid15 Лунаша 3 MONK nil DAMAGER
 ]]
 
+<<<<<<< HEAD
 
 
 
@@ -1687,3 +1683,70 @@ function TESTBARS()
     endTime = debugprofilestop();
     print("Bar2", endTime - beginTime)
 end
+=======
+--[[
+function FauxScrollFrameExample()
+    local BUTTON_HEIGHT = 16
+
+    function MakeFrameList(parent)
+        local prev
+        parent.frameList = {}
+        for i=1,20 do
+            local f = CreateFrame("Frame", nil, parent)
+            f:SetSize(200, BUTTON_HEIGHT)
+
+            if prev then
+                f:SetPoint("TOPLEFT", prev, "BOTTOMLEFT",0,0)
+            else
+                f:SetPoint("TOPLEFT", parent, "TOPLEFT",0,0)
+            end
+            prev = f
+
+            local bg = f:CreateTexture(nil, "BACKGROUND")
+            bg:SetAllPoints(f)
+            bg:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+            if math.fmod(i,2) == 0 then
+                bg:SetVertexColor(0,0,0,0.1)
+            else
+                bg:SetVertexColor(1,1,1,0.1)
+            end
+
+            local icon = f:CreateTexture(nil, "ARTWORK")
+            icon:SetTexture(135882)
+            icon:SetSize(BUTTON_HEIGHT-2, BUTTON_HEIGHT-2)
+            icon:SetPoint("TOPLEFT",1,-1)
+            f.icon = icon
+
+            local label = f:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            label:SetPoint("TOPLEFT", f, "TOPLEFT", BUTTON_HEIGHT+10, 0)
+            label:SetText("ASS")
+            f.label = label
+
+            parent.frameList[i] = f
+        end
+    end
+
+    local f = CreateFrame("ScrollFrame", "FAUXSCROLL", UIParent, "FauxScrollFrameTemplate")
+    f:SetSize(200, 320)
+    f:SetPoint("TOPLEFT", UIParent, "CENTER", 0,0)
+
+    MakeFrameList(f)
+
+    local ScrollFrame_Update = function(frame)
+        FauxScrollFrame_Update(frame,50,20, BUTTON_HEIGHT);
+        -- 50 is max entries, 20 is number of lines, 16 is pixel height of each line
+        print("We're at "..FauxScrollFrame_GetOffset(frame));
+        local offset = FauxScrollFrame_GetOffset(frame)
+        for i=1,20 do
+            local num = i+offset
+            frame.frameList[i].label:SetText("Text"..num)
+        end
+    end
+    ScrollFrame_Update(f)
+
+    f:SetScript("OnVerticalScroll", function(self, offset)
+        FauxScrollFrame_OnVerticalScroll(self, offset, BUTTON_HEIGHT, ScrollFrame_Update);
+    end)
+end
+]]
+>>>>>>> 39c9fa41cc8673fe6d119d72ce6dda9575a4764f
