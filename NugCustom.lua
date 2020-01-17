@@ -1635,7 +1635,6 @@ raid14 nil 3 nil nil DAMAGER
 raid15 Лунаша 3 MONK nil DAMAGER
 ]]
 
-<<<<<<< HEAD
 
 
 
@@ -1683,7 +1682,6 @@ function TESTBARS()
     endTime = debugprofilestop();
     print("Bar2", endTime - beginTime)
 end
-=======
 --[[
 function FauxScrollFrameExample()
     local BUTTON_HEIGHT = 16
@@ -1749,4 +1747,3 @@ function FauxScrollFrameExample()
     end)
 end
 ]]
->>>>>>> 39c9fa41cc8673fe6d119d72ce6dda9575a4764f
