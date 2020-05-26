@@ -214,6 +214,27 @@ function addon:KuiProfileSwapper()
     end)
 end
 
+local function EnterSelectMode(frame)
+    frame = frame or SELECTED_CHAT_FRAME
+
+    frame:SetTextCopyable(true)
+    frame:EnableMouse(true)
+    frame:SetOnTextCopiedCallback(function(frame, text, num_copied)
+      frame:SetTextCopyable(false)
+      frame:EnableMouse(false)
+      frame:SetOnTextCopiedCallback(nil)
+    end)
+end
+
+function addon:HookChatFrameWithCopyMode()
+    local tab = _G["ChatFrame1Tab"]
+    tab:HookScript("OnClick", function(tabFrame)
+        local id = tabFrame:GetID()
+        local cf = _G["ChatFrame"..id]
+        EnterSelectMode(cf)
+    end)
+end
+
 function addon:MoveChat()
     for i=1,2 do
         local cf = _G["ChatFrame"..i]
@@ -310,7 +331,12 @@ function addon:DoMain()
     -- if not isClassic then
         -- addon:KuiProfileSwapper()
     -- end
+
+    addon:HookChatFrameWithCopyMode()
+
     addon:MoveChat()
+
+    addon:CreateSpellSoundPlayer()
 
     local reclamp = function(self)
         GameTooltip:SetClampedToScreen(true)
@@ -673,7 +699,6 @@ end
 --         self:RegisterEvent("PLAYER_REGEN_ENABLED")
 --     end
 -- end)
-
 
 function d87add:MakeAzeriteThing()
     -- local item = Item:CreateFromEquipmentSlot(1)
@@ -1127,30 +1152,13 @@ function dumpspell()
 end
 
 
-local jug = {
-            45226, -- [1]
-            [6] = 50991,
-            [7] = 51544,
-            [8] = 49907,
-            [10] = 30970,
-            [3] = 39613,
-            [16] = 47500,
-            [5] = 60323,
-            [17] = 50794,
-            [55] = 5193,
-            [56] = 51216,
-            [57] = 64884,
-            [58] = 94217,
-            [59] = 51909,
-        }
-
 -- local jug = { 33666, 33668, 33664, 33667, 33665, 33878, 33877  }
 -- local jug = { 41048, 31001, 31003, 31004, 31005, 31006, 72848, 94079, 47296, 47319, 41252 }
 -- local jug = { 103527, 103529, 103525, 103528, 103526, 103457, 103456}
 -- local jug = { 16808, 86713, 46137, 51921, 84353, 63570, 69621 }
 -- local jug = { 46172, 30154, 33484, 82423, 46874, 30151, 44018, 59542, 62450, 32451, 15947 }
-
-local jug = { 113807, 113805, 113808, 113809, 113806, 113810, 113811, 113812 }
+-- local jug = { 113807, 113805, 113808, 113809, 113806, 113810, 113811, 113812 }
+local jug = { 172077, 172082, 172080, 172081, 172076, 172083, 172075, 172078 }
 
 function GetItemLinkByID(id)
 local sName, sLink, iRarity, iLevel, iMinLevel, sType, sSubType, iStackCount = GetItemInfo(id);
