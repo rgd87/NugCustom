@@ -9,6 +9,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
 LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
 LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
+LSM:Register("sound", "Heartbeat5", "Interface/AddOns/NugCustom/heartbeat_mp3.ogg")
 
 _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"
