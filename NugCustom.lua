@@ -319,6 +319,24 @@ function glowUnit(unit)
     end
 end
 
+
+local spellSoundTable = {
+    -- [6343] = 568003,
+    -- [6343] = 3083209,
+    [6343] = 612310,
+}
+
+function addon:CreateSpellSoundPlayer()
+    local f = CreateFrame("Frame")
+    f:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
+    f:SetScript("OnEvent", function(self, event, unit, lineID, spellID)
+        local customSound = spellSoundTable[spellID]
+        if customSound then
+            PlaySoundFile(customSound, "SFX")
+        end
+    end)
+end
+
 function addon:DoMain()
     -- SetCVar("CombatHealing", "1");
     -- SetCVar("violencelevel", 5)	-- [1]
