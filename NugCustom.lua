@@ -718,6 +718,7 @@ end
 --     end
 -- end)
 
+
 function d87add:MakeAzeriteThing()
     -- local item = Item:CreateFromEquipmentSlot(1)
     -- item:Get
@@ -825,13 +826,21 @@ end
 local playerLoginTime = 0
 
 d87add:RegisterEvent("PLAYER_LOGIN");
-function d87add.PLAYER_LOGIN()
+function d87add:PLAYER_LOGIN()
     playerLoginTime = GetTime()
+
+
+    -- self:RegisterEvent("UNIT_HEALTH")
+    -- local CLH = LibStub("LibCombatLogHealth-1.0")
+    -- CLH.RegisterCallback(self, "COMBAT_LOG_HEALTH", function(event, unit, eventType)
+    --     print(GetTime(), "|cffffaaaaCOMBAT_LOG_HEALTH|r", CLH.UnitHealth("player"))
+    -- end)
+
 
     addon:DoMain()
     addon:FixCVars()
     if not isClassic then
-        addon:ModObjectiveTracker()
+        -- addon:ModObjectiveTracker()
     end
 
     -- addon:TestScrollFrameOnModels()
@@ -853,6 +862,10 @@ function d87add.PLAYER_LOGIN()
     end
 
     -- d87add:MakeAzeriteThing()
+end
+
+function d87add:UNIT_HEALTH()
+    print(GetTime(), "|cffaaffaaUNIT_HEALTH|r", UnitHealth("player"))
 end
 
 function addon:ModObjectiveTracker()
@@ -1109,7 +1122,7 @@ function d87add.ADDON_LOADED(self,event,arg1)
     if arg1 ~= addonName then return end
     -- if GetLocale() == "ruRU" then DoGlobalStrings() end
     -- GetLocale = function() return "enUS" end
-    -- HideHotkeys()
+    HideHotkeys()
 
 
 
@@ -1196,26 +1209,26 @@ d87add:SetScript("OnEvent", function(self, event, ...)
 	return self[event](self, event, ...)
 end)
 
--- function HideHotkeys()
---     local bars = {"ActionButton","MultiBarBottomLeftButton","MultiBarBottomRightButton","MultiBarLeftButton","MultiBarRightButton"}
---     for _,bar in ipairs(bars) do
---         for i = 1,12 do
---             local btn = getglobal(bar..i)
---             local name = getglobal(bar..i.."Name")
---             local hotkey = getglobal(bar..i.."HotKey")
---             local border = getglobal(bar..i.."Border")
---             name:Hide();  name.Show = function() end;
---             hotkey:Hide();  hotkey.Show = function() end;
---             border:Hide();  border.Show = function() end;   -- green item border
+function HideHotkeys()
+    local bars = {"ActionButton","MultiBarBottomLeftButton","MultiBarBottomRightButton","MultiBarLeftButton","MultiBarRightButton"}
+    for _,bar in ipairs(bars) do
+        for i = 1,12 do
+            local btn = getglobal(bar..i)
+            local name = getglobal(bar..i.."Name")
+            local hotkey = getglobal(bar..i.."HotKey")
+            local border = getglobal(bar..i.."Border")
+            name:Hide();  name.Show = function() end;
+            hotkey:Hide();  hotkey.Show = function() end;
+            border:Hide();  border.Show = function() end;   -- green item border
 
---             -- pushed state flash
---             -- btn:SetPushedTexture([[Interface\Cooldown\star4]])
---             -- btn:GetPushedTexture():SetBlendMode("ADD")
---             -- btn:GetPushedTexture():SetTexCoord(0.2,0.8,0.2,0.8)
---             -- btn:GetPushedTexture():SetVertexColor(0.5,0.5,1)
---         end
---     end
--- end
+            -- pushed state flash
+            -- btn:SetPushedTexture([[Interface\Cooldown\star4]])
+            -- btn:GetPushedTexture():SetBlendMode("ADD")
+            -- btn:GetPushedTexture():SetTexCoord(0.2,0.8,0.2,0.8)
+            -- btn:GetPushedTexture():SetVertexColor(0.5,0.5,1)
+        end
+    end
+end
 
 
 -- function CreateCustomOverlay(self)

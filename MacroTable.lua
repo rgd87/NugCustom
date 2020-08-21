@@ -13,7 +13,7 @@ local function AddMacro(class, name, icon, body)
         macroTable[class] = {}
         tbl = macroTable[class]
     end
-    if body then 
+    if body then
         table.insert(tbl, { name, icon, body })
     end
 end
@@ -23,7 +23,7 @@ local mouseoverTemplate = "#showtooltip\n/cast [@mouseover,help][help][@player] 
 local totTemplate = "#showtooltip %s\n/cast [@mouseovertarget,exists,harm][@target,exists,harm][@targettarget,harm] "
 local function MouseoverSpell(spellID)
     local spellName = GetSpellInfo(spellID)
-    if not spellName then return print("Spell",spellID,"does not exist") end
+    if not spellName then return print("[NugCustom] Spell",spellID,"does not exist") end
     return string.format(mouseoverTemplate, spellName)
 end
 local function TargetOfTargetMouseoverSpell(spellID)
@@ -65,7 +65,7 @@ end
 
 
 function DumpAllMacros()
-    for id=121,138,1 do 
+    for id=121,138,1 do
         local name, icon, body, isLocal = GetMacroInfo(id)
         local _, class = UnitClass("player")
         print(string.format('AddMacro("%s", "%s", %d,\n[[\n%s\n]])', class, name,icon,body))
@@ -267,7 +267,7 @@ AddMacro("PRIEST", "selfpws", questionMark,
 ]])
 AddMacro("PRIEST", "serenity", questionMark, MouseoverSpell(2050))
 AddMacro("PRIEST", "shadowmend", questionMark, MouseoverSpell(204065))
-AddMacro("PRIEST", "sila", questionMark, MouseoverSpell(204263))    
+AddMacro("PRIEST", "sila", questionMark, MouseoverSpell(204263))
 
 AddMacro("GENERAL", "cleans", questionMark, MouseoverSpell(213634)) -- Purify Disease
 AddMacro("GENERAL", "Siyanie", questionMark, MouseoverSpell(194509)) -- Radiance
@@ -330,7 +330,7 @@ AddMacro("PALADIN", "bop", questionMark, MouseoverSpell(1022))
 AddMacro("PALADIN", "Cleanse", questionMark, MouseoverSpell(4987))
 AddMacro("PALADIN", "CnRet", questionMark, MouseoverSpell(213644))
 AddMacro("PALADIN", "FoL", questionMark, MouseoverSpell(19750))
-AddMacro("PALADIN", "glory", questionMark, MouseoverSpell(210191))
+AddMacro("PALADIN", "glory", questionMark, MouseoverSpell(85673))
 AddMacro("PALADIN", "HL", questionMark, MouseoverSpell(82326))
 AddMacro("PALADIN", "prism", questionMark, MouseoverSpell(114165))
 AddMacro("PALADIN", "sacrifice", questionMark, MouseoverSpell(6940))
