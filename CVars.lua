@@ -91,7 +91,7 @@ local cvars = {
 	-- fullSizeFocusFrame   = "1",
     -- showArenaEnemyFrames = "1",
 	-- showTargetOfTarget   = "1",
-	
+
 	-- Unit Names
 	-- UnitNameOwn                  = "0",
 	-- UnitNameGuildTitle           = "0",
@@ -127,7 +127,7 @@ local cvars = {
 	-- Miscellaneous
 	addFriendInfoShown = "1",
 	screenshotFormat   = "jpeg",
-	screenshotQuality  = "12",
+	screenshotQuality  = "8",
 	talentFrameShown   = "1",
 
 
@@ -167,7 +167,7 @@ function addon:FixCVars()
 			SetCVar(cvar, value)
 		end
     end
-    
+
     -- hooksecurefunc("SetCVar", function(k, v)
     --     local o = cvars[k]
     --     if o and tostring(v) ~= o then

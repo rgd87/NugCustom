@@ -266,7 +266,6 @@ AddMacro("PRIEST", "selfpws", questionMark,
 /cast [@player] spell:17
 ]])
 AddMacro("PRIEST", "serenity", questionMark, MouseoverSpell(2050))
-AddMacro("PRIEST", "shadowmend", questionMark, MouseoverSpell(204065))
 AddMacro("PRIEST", "sila", questionMark, MouseoverSpell(204263))
 
 AddMacro("GENERAL", "cleans", questionMark, MouseoverSpell(213634)) -- Purify Disease
