@@ -144,7 +144,7 @@ local cvars = {
 	uiScale             = "0.8",
 	useUiScale          = "1", -- never wanted this before, but its behavior is different in 7.1
 	violenceLevel       = "5", -- min 0, max 5
-	SpellQueueWindow	= "95",
+	SpellQueueWindow	= "200",
 }
 
 local isClassic = select(4,GetBuildInfo()) <= 19999
