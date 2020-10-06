@@ -337,6 +337,7 @@ function addon:CreateSpellSoundPlayer()
     end)
 end
 
+ChatFrame1:SetMaxLines(256)
 function addon:DoMain()
     -- SetCVar("CombatHealing", "1");
     -- SetCVar("violencelevel", 5)	-- [1]
@@ -1787,3 +1788,10 @@ function FauxScrollFrameExample()
     end)
 end
 ]]
+
+
+-- hooksecurefunc("SecureGroupHeader_Update", function(self)
+--     local headerName = self:GetName()
+
+--     print(GetTime(), "SecureGroupHeader_Update", self:GetName())
+-- end)
