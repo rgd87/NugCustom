@@ -72,36 +72,6 @@ local function StartAttackSpell(spellID, ...)
     return MacroTemplate(templateStartAttack, spellID, ...)
 end
 
-
-function EnsureMacros()
-    local _, class = UnitClass("player")
-    local tabs = { "GENERAL", class }
-
-    for i, tab in ipairs(tabs) do
-        local perCharacter = tab ~= "GENERAL"
-        local tbl = macroTable[tab]
-        for name,macroData in pairs(tbl) do
-            local _, icon, rawBody = unpack(macroData)
-            local localizedBody = string.gsub(rawBody, "spell:(%d+)", function(c)
-                local spellName = GetSpellInfo(tonumber(c))
-                if not spellName then print("[NugCustom] Spell",c,"does not exist") end
-                return spellName
-            end)
-
-            local currentIndex = GetMacroIndexByName(name)
-            if currentIndex == 0 then
-                currentIndex = CreateMacro(name, icon, localizedBody, perCharacter)
-                if not currentIndex or currentIndex == 0 then return end
-                print("Created", name)
-            else
-                EditMacro(currentIndex, nil, icon, localizedBody)
-                print("Updated", name)
-            end
-        end
-    end
-end
-
-
 function DumpAllMacros()
     for id=121,138,1 do
         local name, icon, body, isLocal = GetMacroInfo(id)
@@ -115,6 +85,9 @@ function GetMouseOverSpellID()
     local slotType, spellID = GetSpellBookItemInfo(slot, SpellBookFrame.bookType);
     print(spellID, GetSpellInfo(spellID))
 end
+
+
+local function FIllMacroTable()
 
 local questionMark = "INV_MISC_QUESTIONMARK" -- 134400
 
@@ -352,4 +325,36 @@ AddMacro("SHAMAN", "hwave", questionMark, MouseoverSpell(77472))
 AddMacro("SHAMAN", "riptide", questionMark, MouseoverSpell(61295))
 AddMacro("SHAMAN", "unleash", questionMark, MouseoverSpell(73685))
 AddMacro("SHAMAN", "eshield", questionMark, MouseoverSpell(974))
+end
+
+end
+
+
+function EnsureMacros()
+    FIllMacroTable()
+    local _, class = UnitClass("player")
+    local tabs = { "GENERAL", class }
+
+    for i, tab in ipairs(tabs) do
+        local perCharacter = tab ~= "GENERAL"
+        local tbl = macroTable[tab]
+        for name,macroData in pairs(tbl) do
+            local _, icon, rawBody = unpack(macroData)
+            local localizedBody = string.gsub(rawBody, "spell:(%d+)", function(c)
+                local spellName = GetSpellInfo(tonumber(c))
+                if not spellName then print("[NugCustom] Spell",c,"does not exist") end
+                return spellName
+            end)
+
+            local currentIndex = GetMacroIndexByName(name)
+            if currentIndex == 0 then
+                currentIndex = CreateMacro(name, icon, localizedBody, perCharacter)
+                if not currentIndex or currentIndex == 0 then return end
+                print("Created", name)
+            else
+                EditMacro(currentIndex, nil, icon, localizedBody)
+                print("Updated", name)
+            end
+        end
+    end
 end
