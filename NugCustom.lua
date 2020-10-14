@@ -9,7 +9,23 @@ local LSM = LibStub("LibSharedMedia-3.0")
 LSM:Register("font", "Enigma", [[Interface\AddOns\NugCustom\Enigma__2.ttf]],  GetLocale() ~= "enUS" and 15)
 LSM:Register("font", "ClearFont", [[Interface\AddOns\NugCustom\ClearFont.ttf]],  GetLocale() ~= "enUS" and 15)
 LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold.ttf]],  GetLocale() ~= "enUS" and 15)
+
 LSM:Register("sound", "Heartbeat5", "Interface/AddOns/NugCustom/heartbeat_mp3.ogg")
+
+-- LSM:Register("font", "Roboto-Medium", [[Interface\AddOns\NugCustom\Roboto-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "Roboto-Regular", [[Interface\AddOns\NugCustom\Roboto-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "Ubuntu-Medium", [[Interface\AddOns\NugCustom\Ubuntu-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "Ubuntu-Regular", [[Interface\AddOns\NugCustom\Ubuntu-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "AlegreyaSans-Medium", [[Interface\AddOns\NugCustom\AlegreyaSans-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "AlegreyaSans-Regular", [[Interface\AddOns\NugCustom\AlegreyaSans-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "FiraSans-Medium", [[Interface\AddOns\NugCustom\FiraSans-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "FiraSans-Regular", [[Interface\AddOns\NugCustom\FiraSans-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "AlegreyaSansSC-Medium", [[Interface\AddOns\NugCustom\AlegreyaSansSC-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "AlegreyaSansSC-Regular", [[Interface\AddOns\NugCustom\AlegreyaSansSC-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "NotoSans-Bold", [[Interface\AddOns\NugCustom\NotoSans-Bold.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "NotoSans-Regular", [[Interface\AddOns\NugCustom\NotoSans-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "IBMPlexSans-Medium", [[Interface\AddOns\NugCustom\IBMPlexSans-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
+-- LSM:Register("font", "IBMPlexSans-Regular", [[Interface\AddOns\NugCustom\IBMPlexSans-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
 
 _G.BINDING_NAME_NUGCUSTOM_CHANNELKEY1 = "Open /5 channel"
 _G.BINDING_NAME_NUGCUSTOM_OBJECTIVE_TOGGLE = "Toggle Objective Tracker"

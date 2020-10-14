@@ -182,6 +182,9 @@ AddMacro("ROGUE", "unstealth", 136116,
 ]])
 end
 
+AddMacro("ROGUE", "CQEvis", questionMark, CQSSpell(196819))
+AddMacro("ROGUE", "CQSV", questionMark, CQSSpell(319175))
+
 if playerClass == "WARRIOR" then
 
 AddMacro("WARRIOR", "MS-Slam", questionMark, StartAttackSpell(12294, templateUseTrinketBOTTOM, templateUseTrinketTOP))
