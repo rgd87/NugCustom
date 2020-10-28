@@ -59,7 +59,8 @@ local cvars = {
 	-- Social
 	chatBubbles              = "1",
 	chatBubblesParty         = "0",
-	chatStyle                = "classic",
+    chatStyle                = "classic",
+    whisperMode              = "popout_and_inline",
     -- chatTimestamps           = "none",
 	colorChatNamesByClass    = "1", -- no UI
 	chatClassColorOverride   = "0", -- 0 means always use class colors
