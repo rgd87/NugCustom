@@ -205,7 +205,7 @@ end
 
 if playerClass == "PRIEST" then
 
-AddMacro("PRIEST", "bind", questionMark, MouseoverSpell(32546))
+-- AddMacro("PRIEST", "bind", questionMark, MouseoverSpell(32546))
 AddMacro("PRIEST", "coh", questionMark, MouseoverSpell(204883))
 AddMacro("PRIEST", "Fiend", questionMark,
 [[
@@ -217,7 +217,6 @@ AddMacro("PRIEST", "flash", questionMark, MouseoverSpell(2061))
 AddMacro("PRIEST", "guardian", questionMark, MouseoverCQSSpell(47788))
 AddMacro("PRIEST", "heal", questionMark, MouseoverSpell(2060))
 AddMacro("PRIEST", "lifegr", questionMark, MouseoverCQSSpell(73325))
-AddMacro("PRIEST", "mend", questionMark, MouseoverSpell(33076))
 AddMacro("PRIEST", "moDispel", questionMark, MouseoverCQSSpell(527))
 AddMacro("PRIEST", "mopws", questionMark, MouseoverSpell(17))
 AddMacro("PRIEST", "penance", questionMark, MouseoverSpell(47540))
@@ -231,12 +230,12 @@ AddMacro("PRIEST", "selfpws", questionMark,
 ]])
 AddMacro("PRIEST", "serenity", questionMark, MouseoverCQSSpell(2050))
 AddMacro("PRIEST", "sila", questionMark, MouseoverCQSSpell(204263))
-
+AddMacro("PRIEST", "rapture", questionMark, MouseoverSpell(47536))
 AddMacro("GENERAL", "cleans", questionMark, MouseoverSpell(213634)) -- Purify Disease
 AddMacro("GENERAL", "Siyanie", questionMark, MouseoverSpell(194509)) -- Radiance
 AddMacro("GENERAL", "tot_hf", questionMark, TargetOfTargetMouseoverSpell(14914))
 AddMacro("GENERAL", "tot_smite", questionMark, TargetOfTargetMouseoverSpell(585))
-AddMacro("GENERAL", "tot_penance", "Spell_Arcane_Invocation", TargetOfTargetMouseoverSpell(47540))
+AddMacro("GENERAL", "tot_penance", 1394892, TargetOfTargetMouseoverSpell(47540))
 
 
 end
@@ -251,7 +250,7 @@ AddMacro("DRUID", "bearform", questionMark,
 /cast [form:1] spell:22842
 ]])
 
-AddMacro("DRUID", "cancelform", 136116,
+AddMacro("DRUID", "cancelform", 132160,
 [[
 /cancelform
 ]])
@@ -260,6 +259,12 @@ AddMacro("DRUID", "decurse", questionMark, MouseoverCQSSpell(2782))
 AddMacro("DRUID", "dispel", questionMark, MouseoverCQSSpell(88423))
 AddMacro("DRUID", "ironbark", questionMark, MouseoverCQSSpell(102342))
 AddMacro("DRUID", "lblom", questionMark, MouseoverSpell(33763))
+AddMacro("DRUID", "selfbloom", questionMark,
+[[
+#showtooltip
+/cast [@player] spell:33763
+]])
+
 AddMacro("DRUID", "swiftmend", questionMark, MouseoverCQSSpell(18562))
 AddMacro("DRUID", "wgrowth", questionMark, MouseoverSpell(48438))
 AddMacro("DRUID", "regrowth", questionMark, MouseoverSpell(8936))
@@ -276,14 +281,19 @@ AddMacro("DRUID", "stealth", 132299,
 /cast [modifier:shift] spell:5215
 /cast [form:2, nostealth] spell:5215
 ]])
+
+AddMacro("DRUID", "unstealth", 461113,
+[[
+/cast [stealth] spell:5215
+]])
 --5215 - prowl
 --768 - cat form
 
-AddMacro("DRUID", "mangle", questionMark,
-[[
-/dismount [mounted]
-/cast Походный облик
-]])
+-- AddMacro("DRUID", "travelform", questionMark,
+-- [[
+-- /dismount [mounted]
+-- /cast spell:783
+-- ]])
 
 end
 

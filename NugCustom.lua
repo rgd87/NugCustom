@@ -1141,7 +1141,7 @@ function d87add.ADDON_LOADED(self,event,arg1)
     if arg1 ~= addonName then return end
     -- if GetLocale() == "ruRU" then DoGlobalStrings() end
     -- GetLocale = function() return "enUS" end
-    HideHotkeys()
+    -- HideHotkeys()
 
 
 
