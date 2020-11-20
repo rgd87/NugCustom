@@ -1813,3 +1813,265 @@ end
 
 --     print(GetTime(), "SecureGroupHeader_Update", self:GetName())
 -- end)
+
+--[==[
+local DebuffTypeColors = {
+    Physical = { 1, 0, 0 },
+    Magic = { 0.2, 0.6, 1},
+    Curse = { 0.6, 0, 1},
+    Poison = { 0, 0.6, 0},
+    Disease = { 0.6, 0.4, 0},
+}
+
+local function AddDebuffIcon(hdr)
+    local f = CreateFrame("Frame", nil, UIParent)
+    local w,h = 40, 40
+    f:SetSize(w, h)
+
+    local bg = f:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    -- bg:SetVertexColor(0,0,0, 0.7)
+    f.bg = bg
+
+    local t = f:CreateTexture(nil, "ARTWORK")
+    t:SetPoint("TOPLEFT", 3, -3)
+    t:SetPoint("BOTTOMRIGHT", -3, 3)
+    t:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    f.icon = t
+
+    local dtt = f:CreateTexture(nil, "ARTWORK", nil, 2)
+    dtt:SetTexture[[Interface\AddOns\Aptechka\corner3]]
+    dtt:SetTexCoord(0,1,0,1)
+    dtt:SetSize(w*0.35, h*0.35)
+    dtt:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0,0)
+    f.debuffType = dtt
+
+    local outline = f:CreateTexture(nil, "BACKGROUND", nil, 1)
+    outline:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    outline:SetVertexColor(0,0,0, 1)
+    outline:SetPoint("TOPLEFT", f.icon, "TOPLEFT", -1, 1)
+    outline:SetPoint("BOTTOMRIGHT", f.icon, "BOTTOMRIGHT", 1, -1)
+
+
+
+    -- if not f.SetBackdrop then
+    --     Mixin(f, BackdropTemplateMixin)
+    -- end
+
+    -- f:SetBackdrop(debuff_border_backdrop)
+    -- f:SetBackdropColor(1,0,0)
+
+    table.insert(hdr.frames, f)
+
+    return f
+end
+
+local function CreateSeparator(hdr)
+    local t = hdr:CreateTexture(nil, "ARTWORK")
+    t:SetWidth(3)
+    t:SetHeight(60)
+    t:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    t:SetPoint("LEFT", 10, 0)
+    t:SetVertexColor(0.65, 0, 0)
+    return t
+end
+
+local f = CreateFrame("Frame", nil, UIParent)
+f:SetSize(30, 30)
+f:SetPoint("CENTER", -200, 0)
+f.frames = {}
+f.separator = CreateSeparator(f)
+f.AddDebuffIcon = AddDebuffIcon
+f:RegisterUnitEvent("UNIT_AURA", "player")
+f:SetScript("OnEvent", function(hdr, event, unit)
+    local index = 0;
+    local prev = hdr
+    for i=1, 40 do
+        local name, icon, count, dt, duration, expirationTime, caster, _,_, spellID = UnitAura(unit, i, "HARMFUL")
+        if not name then break end
+        if not addon.blacklist[spellID] then
+            index = index + 1;
+            local frame = hdr.frames[index]
+            if not frame then
+                frame = hdr:AddDebuffIcon()
+            end
+            frame:Show()
+            frame.icon:SetTexture(icon)
+            local dtColor = dt and DebuffTypeColors[dt] or DebuffTypeColors["Physical"]
+            frame.debuffType:SetVertexColor(unpack(dtColor))
+            frame.bg:SetVertexColor(unpack(dtColor))
+            -- frame:SetBackdropColor(1,0,0)
+            -- frame:ApplyBackdrop()
+
+            frame:SetPoint("RIGHT", prev, "LEFT", -5, 0)
+            prev = frame
+        end
+    end
+
+    for i=index+1, #hdr.frames do
+        hdr.frames[i]:Hide()
+    end
+
+    if index == 0 then
+        hdr.separator:Hide()
+    else
+        hdr.separator:Show()
+    end
+end)
+
+
+addon.blacklist = {
+    -- cast blacklist is shared with auras
+    [120651] = true, -- explosive orb affix cast
+
+    [178394] = true, -- Honorless Target
+
+    [338906] = true, -- Jailer's Chains (Torghast debuff)
+    [331148] = true, -- Torment: Eye of Skoldus
+    [326469] = true, -- Torment: Soulforge Heat
+    [331149] = true, -- Torment: Fracturing Forces
+    [331151] = true, -- Torment: Breath of Coldheart
+    [331153] = true, -- Torment: Mort'regar's Echoes
+    [331154] = true, -- Torment: Might of the Upper Reaches
+    [296847] = true, -- Torghast: Opressive Aura
+    [294720] = true, -- Torghast: Bottled Enigma
+
+
+    -- nazjatar pvp event participation states
+    [304966] = true,
+    [304959] = true,
+    [304851] = true,
+
+    [312243] = true, -- Amber Casing (Eternal Blossoms assault debuff)
+    [318391] = true, -- Great Worm's Foul Stench
+
+    [26218] = true, -- Winterveil something
+    [26680] = true, -- Adored (Love is in the Air)
+
+    [287825] = true, -- Lethargy, Hit or run azerite trait
+
+    [209261] = true, -- Uncontained Fel (DH, Last Resort cooldown)
+    [264689] = true, -- Fatigued (Hunter BL)
+    [219521] = true, -- Shadow Covenant (Disc Priest Talent)
+    [139485] = true, -- Throne of Thudner passive debuff
+    [57724] = true, -- Sated (BL)
+    [80354] = true, -- Temporal Displacement (Mage BL)
+    [95809] = true, -- Insanity (old Hunter BL, Ancient Hysteria)
+    [57723] = true, -- Drums BL debuff, and Heroism?
+    [26013] = true, -- PVP Deserter
+    [71041] = true, -- Deserter
+    [8326] = true, -- Ghost
+    [25771] = true, -- Forbearance
+    [41425] = true, -- Hypothermia (after Ice Block)
+    [6788] = true, -- Weakened Soul
+    [113942] = true, -- demonic gates debuff
+    [123981] = true, -- dk cooldown debuff
+    [87024] = true, -- mage cooldown debuffц
+    [97821] = true, -- dk battleres debuff
+    [124275] = true, -- brewmaster light stagger debuff
+    [174528] = true, -- Griefer debuff
+    [206151] = true, -- Challenger's Burden
+
+    [256200] = true, -- Heartstopper Venom, Tol'Dagor
+    [271544] = true, -- Ablative Shielding, Tank Azerite trait
+
+    [45181] = true, -- Cheat Death cooldown
+    [187464] = true, -- Shadowmend debuff
+
+    -- PvP trash debuffs
+    [110310] = true, -- Dampening
+    [195901] = true, -- Adaptation
+
+    -- Azerite Traits
+    [280286] = true, -- Dagger in the Back
+    [279956] = true, -- Azerite Globules
+
+
+
+    -- Common
+
+    -- Healing Reduction
+    -- [115804] = true, -- Mortal Wound, Healing effects received reduced by 25%.
+    -- [197046] = true, -- Assa Rogue PvP Talent: Minor Wound Poison, Poison, Healing effects reduced by 15%.
+    -- [8680] = true, -- Assa Rogue: Wound Poison, Poison, Healing effects reduced by 30%.
+    [30213] = true, -- Demonology Warlock: Legion Strike, Effectiveness of any healing reduced by 10%.
+
+    -- Slows
+    -- [1715] = true, -- Warrior Hamstring, Physical 50%
+    -- [12323] = true, -- Fury Warrior, Piercing Howl, Physical 50%
+    -- [116095] = true, -- WW Monk, Disable, Physical 50%
+    -- [183218] = true, -- Paladin, Hand of Hindrance, Magic 70%
+    -- [185763] = true, -- Outlaw Rogue, Pistol Shot, Physical 50%
+    -- [206760] = true, -- Subtlety Rogue, Shadow's Grasp, Magic 30%
+    -- [3409] = true, -- Crippling Poison, Poison 50%
+    [248744] = true, -- Assa Rogue, Shiv, Physical 70%. 4s
+    -- [205708] = true, -- Frost Mage, Chilled, Magic 65% 15s
+    -- [212792] = true, -- Frost Mage, Cone of Cold, Magic 85% 5s
+    -- [31589] = true, -- Arcane Mage, Slow, Magic 50%
+    -- [157981] = true, -- Fire Mage, Blast Wave, Physical 70% 4s
+    -- [186387] = true, -- Hunter, Bursting Shot, Physical 50s 4s
+    -- [195645] = true, -- Hunter Survival: Wing Clip, Physical 50%
+    -- [5116] = true, -- Hunter: Concussive Shot, Physical 50% 6s
+
+
+
+    -- MONK
+    [113746] = true, -- 8.0 Monk: Mystic Touch, Physical damage taken increased by 5%.
+    [228287] = true, -- 8.0 WW Monk: Mark of the Crane, Increases the damage of the Monk's Spinning Crane Kick by 10%.
+    [273299] = true, -- 8.0 Monk Azerite Trait Sunrise Technique, Taking additional damage from Melee abilities.
+    [337341] = true, -- 9.0 WW Monk: Skyreach Exhaustion, Keerer's Skyreach artifact CD
+
+    -- WARRIOR
+
+    -- DEMON HUNTER
+    [1490] = true, -- 8.0 DH: Chaos Brand, Magic damage taken increased by 5%.
+    [258860] = true, -- 8.0 DH: Dark Slash
+
+    -- DEATH KNIGHT
+    [214968] = true, -- 8.0 DK PvP Talent, Necrotic Aura, Taking 8% increased magical damage.
+    [214975] = true, -- 8.0 DK PvP Talent, Heartstop Aura, Cooldown recovery rate decreased by 20%.
+    [51714] = true, -- 8.0 Frost DK:  Razorice, Frost damage taken from the Death Knight's abilities increased by 3%.
+
+    -- PALADIN
+    [197277] = true, -- 8.0 Paladin: Judgement, Taking 25% increased damage from the Paladin's next Holy Power spender.
+    [246807] = true, -- 8.0 Paladin PvP Talent: Lawbringer, Suffering up to 5% of maximum health in Holy damage when Judgment is cast.
+    [204242] = true, -- 8.0 Paladin Holy, Consecration
+
+    -- ROGUE
+    [255909] = true, -- Rogue: Prey on the Weak, Damage taken increased by 10%. 6s
+    [196937] = true, -- Outlaw Rogue: Ghostly Strike, Taking 10% increased damage from the Rogue's abilities.
+    [137619] = true, -- Rogue: Marked for Death, Marked for Death will reset upon death.
+    [91021] = true, -- Sub Rogue Talent: Find Weakness, 40% of armor is ignored by the attacking Rogue.
+    [245389] = true, -- Assa Rogue Talent: Toxic Blade, 30% increased damage taken from poisons from the casting Rogue.
+    [256148] = true, -- Assa Rogue Talent: Iron Wire, Damage done reduced by 15%.
+    [154953] = true, -- Assa Rogue Talent: Internal Bleeding, Suffering (3.12% of Attack power) damage every 1 sec.
+    [198222] = true, -- Assa Rogue PvP Talent: System Shock, Poison, Movement speed reduced by 90%. 2s
+    -- [198097] = true, -- Assa Rogue PvP Talent: Creeping Venom, Poison, Suffering (2% of Attack power) Nature damage every 0.5 seconds.  Moving while afflicted by Creeping Poison causes it to refresh its duration to 4 sec.
+    [197091] = true, -- Assa Rogue PvP Talent: Neurotoxin, Poison, Poisoned with a deadly neurotoxin.  Any ability used will incur an additional 3 second cooldown.
+    [197051] = true, -- Assa Rogue PvP Talent: Mind-Numbing Poison, Poison, Casting spells while under the effects of Mind-numbing Poison will cause you to take Nature damage.
+
+
+    -- MAGE
+    [226757] = true, -- Fire Mage Talent: Conflagration, Deals (1.65% of Spell power) Fire damage every 2 sec.
+    [12654] = true, -- Fire Mage: Ignite
+    [2120] = true, -- Fire Mage, Flamestrike Slow, Physical 20% 8s
+
+    -- WARLOCK
+    [32390] = true, -- Aff Warlock Talent: Shadow Embrace
+    [198590] = true, -- Aff Warlock: Drain Soul
+    [234153] = true, -- Warlock: Drain Life
+
+    -- HUNTER
+    -- [131894] = true, -- Hunter: A Murder of Crows
+    [259277] = true, -- Survival Hunter: Bloodseeker
+    -- Wildfire Bombs
+    -- [269747] = true, -- Wildfire Bomb
+    [271049] = true, -- Volatile Wildfire
+    [270339] = true, -- Scorching Shrapnel
+    [270332] = true, -- Scorching Pheromones
+    [132951] = true, -- Hunter Flare
+
+
+}
+]==]
