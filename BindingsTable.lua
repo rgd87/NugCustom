@@ -48,7 +48,7 @@ function EnsureBindings(...)
             ["F3"] = "MULTIACTIONBAR2BUTTON3",
             ["F4"] = "MULTIACTIONBAR2BUTTON4",
             ["F5"] = "MULTIACTIONBAR2BUTTON5",
-            ["ALT-G"] = "MULTIACTIONBAR2BUTTON6",
+            ["SHIFT-G"] = "MULTIACTIONBAR2BUTTON6",
             ["G"] = "MULTIACTIONBAR2BUTTON7",
             ["H"] = "MULTIACTIONBAR2BUTTON8",
             ["T"] = "MULTIACTIONBAR2BUTTON9",
@@ -82,6 +82,37 @@ function EnsureBindings(...)
             ["CTRL-F2"] = "MULTIACTIONBAR4BUTTON10",
             -- ["CTRL-BUTTON4"] = "MULTIACTIONBAR4BUTTON11",
             -- ["CTRL-F1"] = "MULTIACTIONBAR4BUTTON12",
+        },
+        pvp = {
+            ["ALT-CTRL-Z"] = "TOGGLEUI",
+            ["ALT-Z"] = "NONE",
+            ["ALT-CTRL-MOUSEWHEELUP"] = "VEHICLEAIMINCREMENT",
+            ["ALT-CTRL-MOUSEWHEELDOWN"] = "VEHICLEAIMDECREMENT", -- raise/lower head
+
+            ["SHIFT-MOUSEWHEELUP"] = "TARGETSELF",
+            ["SHIFT-MOUSEWHEELDOWN"] = "TARGETPARTYMEMBER1",
+            ["SHIFT-BUTTON3"] = "TARGETPARTYMEMBER2",
+
+            ["CTRL-MOUSEWHEELUP"] = "TARGETARENA1",
+            ["CTRL-MOUSEWHEELDOWN"] = "TARGETARENA2",
+            ["CTRL-BUTTON3"] = "TARGETARENA3",
+
+            ["SHIFT-1"] = "MULTIACTIONBAR3BUTTON1",
+            ["SHIFT-2"] = "MULTIACTIONBAR3BUTTON2",
+            ["SHIFT-3"] = "TARGETARENA1",
+            ["SHIFT-4"] = "TARGETARENA2",
+            ["SHIFT-5"] = "TARGETARENA3",
+
+            ["CTRL-BUTTON5"] = "FOCUSTARGET",
+            ["CTRL-BUTTON4"] = "MACRO ClearFocus", --
+
+            ["ALT-CTRL-3"] = "MACRO PHeal1",
+            ["ALT-CTRL-4"] = "MACRO PHeal2",
+            ["ALT-CTRL-5"] = "MACRO PHeal3",
+
+            ["ALT-SHIFT-3"] = "MACRO PDispel1",
+            ["ALT-SHIFT-4"] = "MACRO PDispel2",
+            ["ALT-SHIFT-5"] = "MACRO PDispel3",
         },
         pet = {
             ["F"] = "BONUSACTIONBUTTON1",
@@ -121,8 +152,8 @@ function EnsureBindings(...)
             ["NUMPAD2"] = "NUGMINIPETRANDOMPET",
             ["NUMPAD3"] = "NUGMINIPETDISABLE",
 
-            ["SHIFT-MOUSEWHEELDOWN"] = "TARGETNEARESTENEMY",
-            ["SHIFT-MOUSEWHEELUP"] = "TARGETPREVIOUSENEMY",
+            -- ["SHIFT-MOUSEWHEELDOWN"] = "TARGETNEARESTENEMY",
+            -- ["SHIFT-MOUSEWHEELUP"] = "TARGETPREVIOUSENEMY",
 
             ["J"] = "TOGGLEGUILDTAB",
             ["SHIFT-U"] = "TOGGLECHATTAB",
