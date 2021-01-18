@@ -2091,3 +2091,349 @@ addon.blacklist = {
 
 }
 ]==]
+
+--[=[
+local hdr = CreateFrame("Frame", "TestGH", UIParent, "SecureGroupHeaderTemplate")
+hdr:SetAttribute("template", "SecureUnitButtonTemplate")
+hdr:SetAttribute("showRaid", true)
+hdr:SetAttribute("showParty", true)
+hdr:SetAttribute("showPlayer", true)
+hdr:SetAttribute("showSolo", true)
+hdr:SetAttribute("point", "LEFT")
+-- hdr:SetAttribute("unitsPerColumn", 5)
+-- hdr:SetAttribute("maxColumns", 8 )
+hdr:SetAttribute("xOffset", 5)
+hdr:SetAttribute("yOffset", 5)
+hdr:SetAttribute("nameList", "Конкура,Лунаша")
+hdr:SetAttribute("sortMethod", "NAMELIST")
+hdr:SetSize(50, 50)
+hdr:SetPoint("CENTER",0,0)
+
+
+hdr.SetupUnitButton = function(header, frameName)
+    local frame = _G[frameName]
+    local t = frame:CreateTexture(nil, "ARTWORK")
+    t:SetAllPoints(frame)
+    t:SetTexture("Interface\\BUTTONS\\WHITE8X8")
+    t:SetVertexColor(0,0,0, 0.5)
+end
+
+hdr:SetAttribute("initialConfigFunction", [[
+    RegisterUnitWatch(self)
+    self:SetWidth(50)
+    self:SetHeight(50)
+
+    self:SetAttribute("*type1","target")
+
+    local header = self:GetParent()
+    header:CallMethod("SetupUnitButton", self:GetName())
+]])
+
+hdr:Show()
+]=]
+
+--[[
+local function getRelativePointAnchor( point )
+    point = point:upper();
+    if (point == "TOP") then
+        return "BOTTOM", 0, -1;
+    elseif (point == "BOTTOM") then
+        return "TOP", 0, 1;
+    elseif (point == "LEFT") then
+        return "RIGHT", 1, 0;
+    elseif (point == "RIGHT") then
+        return "LEFT", -1, 0;
+    elseif (point == "TOPLEFT") then
+        return "BOTTOMRIGHT", 1, -1;
+    elseif (point == "TOPRIGHT") then
+        return "BOTTOMLEFT", -1, -1;
+    elseif (point == "BOTTOMLEFT") then
+        return "TOPRIGHT", 1, 1;
+    elseif (point == "BOTTOMRIGHT") then
+        return "TOPLEFT", -1, 1;
+    else
+        return "CENTER", 0, 0;
+    end
+end
+
+function ConfigHeader(self, unitTable)
+    local point = self:GetAttribute("point") or "TOP"; --default anchor point of "TOP"
+    local relativePoint, xOffsetMult, yOffsetMult = getRelativePointAnchor(point);
+    local xMultiplier, yMultiplier =  abs(xOffsetMult), abs(yOffsetMult);
+    local xOffset = self:GetAttribute("xOffset") or 0; --default of 0
+    local yOffset = self:GetAttribute("yOffset") or 0; --default of 0
+    local sortDir = self:GetAttribute("sortDir") or "ASC"; --sort ascending by default
+    local columnSpacing = self:GetAttribute("columnSpacing") or 0;
+    local startingIndex = self:GetAttribute("startingIndex") or 1;
+
+    -- local unitCount = #unitTable;
+    local unitCount = 20;
+    local numDisplayed = unitCount - (startingIndex - 1);
+    local unitsPerColumn = self:GetAttribute("unitsPerColumn");
+    local numColumns;
+    if ( unitsPerColumn and numDisplayed > unitsPerColumn ) then
+        numColumns = min( ceil(numDisplayed / unitsPerColumn), (self:GetAttribute("maxColumns") or 1) );
+    else
+        unitsPerColumn = numDisplayed;
+        numColumns = 1;
+    end
+    print("numDisplayed, numColumns", numDisplayed, numColumns)
+    local loopStart = startingIndex;
+    local loopFinish = min((startingIndex - 1) + unitsPerColumn * numColumns, unitCount)
+    local step = 1;
+
+    numDisplayed = loopFinish - (loopStart - 1);
+
+    if ( sortDir == "DESC" ) then
+        loopStart = unitCount - (startingIndex - 1);
+        loopFinish = loopStart - (numDisplayed - 1);
+        step = -1;
+    end
+
+    -- -- ensure there are enough buttons
+    -- local needButtons = max(1, numDisplayed);
+    -- if not ( self:GetAttribute("child"..needButtons) ) then
+    -- 	local buttonTemplate = self:GetAttribute("template");
+    -- 	local templateType = self:GetAttribute("templateType") or "Button";
+    -- 	local name = self:GetName();
+    -- 	for i = 1, needButtons, 1 do
+    -- 		local childAttr = "child" .. i;
+    -- 		if not ( self:GetAttribute(childAttr) ) then
+    -- 			local newButton = CreateFrame(templateType, name and (name.."UnitButton"..i), self, buttonTemplate);
+    -- 			self[i] = newButton;
+    -- 			SetupUnitButtonConfiguration(self, newButton);
+    -- 			setAttributesWithoutResponse(self, childAttr, newButton, "frameref-"..childAttr, GetFrameHandle(newButton));
+    -- 		end
+    -- 	end
+    -- end
+
+    local columnAnchorPoint, columnRelPoint, colxMulti, colyMulti;
+    if ( numColumns > 1 ) then
+        columnAnchorPoint = self:GetAttribute("columnAnchorPoint");
+        columnRelPoint, colxMulti, colyMulti = getRelativePointAnchor(columnAnchorPoint);
+    end
+
+    local buttonNum = 0;
+    local columnNum = 1;
+    local columnUnitCount = 0;
+    local currentAnchor = self;
+    for i = loopStart, loopFinish, step do
+        buttonNum = buttonNum + 1;
+        columnUnitCount = columnUnitCount + 1;
+        if ( columnUnitCount > unitsPerColumn ) then
+            columnUnitCount = 1;
+            columnNum = columnNum + 1;
+        end
+
+        local unitButton = "Button"..buttonNum;
+        if ( buttonNum == 1 ) then
+            -- unitButton:SetPoint(point, currentAnchor, point, 0, 0);
+            print("SetPoint point, currentAnchor, point", point, currentAnchor, point, 0, 0)
+            if ( columnAnchorPoint ) then
+                print("SetPoint columnAnchorPoint", columnAnchorPoint, currentAnchor, columnAnchorPoint, 0, 0)
+                -- unitButton:SetPoint(columnAnchorPoint, currentAnchor, columnAnchorPoint, 0, 0);
+            end
+
+        elseif ( columnUnitCount == 1 ) then
+            print(">>> FIRST COLUMN UNIT", unitButton)
+            local columnAnchor = "button"..(buttonNum - unitsPerColumn);
+            print(columnAnchorPoint, columnAnchor, columnRelPoint, colxMulti * columnSpacing, colyMulti * columnSpacing)
+            -- unitButton:SetPoint(columnAnchorPoint, columnAnchor, columnRelPoint, colxMulti * columnSpacing, colyMulti * columnSpacing);
+        else
+            print("NORMAL UNIT", unitButton)
+            print(point, currentAnchor, relativePoint, xMultiplier * xOffset, yMultiplier * yOffset)
+            -- unitButton:SetPoint(point, currentAnchor, relativePoint, xMultiplier * xOffset, yMultiplier * yOffset);
+        end
+        -- unitButton:SetAttribute("unit", unitTable[i]);
+
+        -- local configCode = unitButton:GetAttribute("refreshUnitChange");
+        -- if ( type(configCode) == "string" ) then
+        -- 	local selfHandle = GetFrameHandle(unitButton);
+        -- 	if ( selfHandle ) then
+        -- 		CallRestrictedClosure(unitButton, "self",
+        -- 		                      GetManagedEnvironment(unitButton, true),
+        -- 		                      selfHandle, configCode, selfHandle);
+        -- 	end
+        -- end
+
+        -- if not unitButton:GetAttribute("statehidden") then
+        -- 	unitButton:Show();
+        -- end
+
+        currentAnchor = unitButton;
+    end
+end
+]]
+
+
+function addon.CreateAlphaDriver()
+    local f = CreateFrame("Frame", "NugCustomAlphaDriver", UIParent)
+    f:SetFrameStrata("HIGH")
+
+    f:SetSize(700, 160)
+    f:SetPoint("BOTTOM",0,0)
+
+    f.alphaFrames = {
+        -- [NugArtMainMenuBackground] = true,
+        -- [oUF_NugVials] = true,
+    }
+
+    local rawSetAlpha = f.SetAlpha
+
+    f.Add = function(self, frame)
+        self.alphaFrames[frame] = true
+        -- frame.SetAlpha = function() end
+    end
+
+    f:Add(NugArtMainMenuBackground)
+    f:Add(oUF_NugVials)
+    local bars = {"ActionButton","MultiBarBottomLeftButton","MultiBarBottomRightButton","MultiBarLeftButton","MultiBarRightButton"}
+    for _,bar in ipairs(bars) do
+        for i = 1,12 do
+            local btn = getglobal(bar..i)
+            f:Add(btn)
+        end
+    end
+
+
+    f:SetScript("OnEnter", function(self)
+        for frame in pairs(self.alphaFrames) do
+            frame:SetAlpha(1)
+        end
+    end)
+
+    f:SetScript("OnLeave", function(self)
+        for frame in pairs(self.alphaFrames) do
+            frame:SetAlpha(0)
+        end
+    end)
+    f:EnableMouse(false)
+
+end
+
+
+
+local function IsCombatItem(class, subclass, slot)
+	return slot ~= 'INVTYPE_TABARD' and slot ~= 'INVTYPE_BODY' and subclass ~= FISHING_POLE
+end
+
+local POOR, COMMON, UNCOMMON, RARE, EPIC = 0,1,2,3,4
+local function IsStandardQuality(quality)
+	return quality >= UNCOMMON and quality <= EPIC
+end
+
+local ScanTip = CreateFrame("GameTooltip", "NCScanTip", nil, "GameTooltipTemplate")
+ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
+function ScanTip:Load(link, bag, slot)
+    self:SetOwner(UIParent, 'ANCHOR_NONE')
+
+	if bag and slot then
+		if bag ~= BANK_CONTAINER then
+			self:SetBagItem(bag, slot)
+		else
+			self:SetInventoryItem('player', BankButtonIDToInvSlotID(slot))
+		end
+	else
+		self:SetHyperlink(link)
+	end
+
+	self.limit = 2
+	self.numLines = self:NumLines()
+end
+function ScanTip:ScanLine(i)
+	local line = _G[self:GetName() .. 'TextLeft' .. i]
+	return line and line:GetText() or ''
+end
+
+local CAN_TRADE = BIND_TRADE_TIME_REMAINING:format('.*')
+local CAN_REFUND = REFUND_TIME_REMAINING:format('.*')
+local MATCH_CLASS = ITEM_CLASSES_ALLOWED:format('')
+local IN_SET = EQUIPMENT_SETS:format('.*')
+local function BelongsToSet()
+	return C_EquipmentSet and C_EquipmentSet.CanUseEquipmentSets() and ScanTip:ScanLine(ScanTip.numLines - 1):find(IN_SET)
+end
+
+local function IsSoulbound(bag, slot)
+	local lastLine = ScanTip:ScanLine(ScanTip.numLines)
+	local soulbound = bag and slot and ITEM_SOULBOUND or ITEM_BIND_ON_PICKUP
+
+	if not lastLine:find(CAN_TRADE) and not lastLine:find(CAN_REFUND) then
+		for i = 2,7 do
+			if ScanTip:ScanLine(i) == soulbound then
+				ScanTip.limit = i
+				return true
+			end
+		end
+	end
+end
+
+local function IsLowLevelGear(link, itemLevelThreshold)
+    local itemLevel = GetDetailedItemLevelInfo(link)
+    return itemLevel <= itemLevelThreshold
+end
+
+local WEAPON, ARMOR, CONSUMABLES = LE_ITEM_CLASS_WEAPON, LE_ITEM_CLASS_ARMOR, LE_ITEM_CLASS_CONSUMABLE
+local function IsJunk(bag, position, itemLevelThreshold)
+    local link = GetContainerItemLink(bag, position)
+    if not link then return false end
+
+    local _, _, quality, _,_,_,_,_, slot, _, value, class, subclass = GetItemInfo(link)
+
+    if not value or value == 0 then
+        return
+
+    elseif class == ARMOR or class == WEAPON then
+		if value and IsCombatItem(class, subclass, slot) then
+			-- if quality == POOR then
+				-- return (slot ~= 'INVTYPE_SHOULDER' and level > 15) or level > 25
+			if IsStandardQuality(quality) then
+				ScanTip:Load(link, bag, position)
+
+				if not BelongsToSet() and IsSoulbound(bag, position) then
+					return IsLowLevelGear(link, itemLevelThreshold)
+				end
+			end
+        end
+    elseif quality == POOR then
+		return true
+	elseif class == CONSUMABLES then
+		return false
+    end
+end
+
+
+local function PrintTotal(totalValue)
+    local tvGold = math.floor(totalValue / 10000)
+    print(string.format("TOTAL: %dg", tvGold))
+end
+
+function SellOldGear(itemLevelThreshold)
+    if not MerchantFrame:IsShown() then return end
+
+    local maxItems = 12
+    local numItemsSold = 0
+    local totalValue = 0
+    for bag=0,4 do
+        for slot=1,GetContainerNumSlots(bag) do
+            if IsJunk(bag, slot, itemLevelThreshold) then
+                local _, count, _,_,_,_, link = GetContainerItemInfo(bag, slot)
+                local _, _, quality, _,_,_,_,_, _, _, value = GetItemInfo(link)
+
+                UseContainerItem(bag, slot)
+                PickupMerchantItem()
+
+                local stackValue = (value or 0) * count
+                totalValue = totalValue + stackValue
+                print("Sold ", link)
+
+                numItemsSold = numItemsSold + 1
+
+                if numItemsSold == maxItems then
+                    return PrintTotal(totalValue)
+                end
+            end
+        end
+    end
+
+    PrintTotal(totalValue)
+end
