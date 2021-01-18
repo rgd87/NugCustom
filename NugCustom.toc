@@ -1,5 +1,6 @@
 ## Interface: 80000
 ## Title: NugCustom
+## OptionalDeps: NugArt
 ## Author: d87
 
 Libs\LibStub\LibStub.lua

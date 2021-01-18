@@ -357,9 +357,23 @@ end
 
 ChatFrame1:SetMaxLines(256)
 function addon:DoMain()
+
+    -- local f = CreateFrame("Frame")
+    -- f:RegisterEvent("GROUP_ROSTER_UPDATE")
+    -- f:RegisterEvent("UNIT_NAME_UPDATE")
+    -- f:SetScript("OnEvent", function(self, event)
+    --     print(event)
+    --     print(UnitExists("player"))
+    -- end)
+
+    -- hooksecurefunc("SecureGroupHeader_Update", function(self)
+    --     print("SecureGroupHeader_Update")
+    --     print(UnitExists("player"))
+    -- end)
+
     -- SetCVar("CombatHealing", "1");
     -- SetCVar("violencelevel", 5)	-- [1]
-	-- SetCVar("screenshotQuality", 12)	-- [2]
+    -- SetCVar("screenshotQuality", 12)	-- [2]
     -- SetCVar("screenshotFormat", "jpeg")	-- [3]
     -- SetCVar("nameplateMaxDistance", 70)
     -- SetCVar("WeatherDensity", 3)
@@ -368,6 +382,8 @@ function addon:DoMain()
     -- if not isClassic then
         -- addon:KuiProfileSwapper()
     -- end
+
+    -- addon:CreateAlphaDriver()
 
     addon:HookChatFrameWithCopyMode()
 
@@ -1058,7 +1074,7 @@ function addon:ModObjectiveTracker()
 
     -- -- NORMAL QUESTS
     -- 55520
-	-- for i = 1, GetNumQuestWatches() do
+    -- for i = 1, GetNumQuestWatches() do
     --     local questID, title, questLogIndex, numObjectives, requiredMoney, isComplete, startEvent, isAutoComplete, failureTime, timeElapsed, questType, isTask, isBounty, isStory, isOnMap, hasLocalPOI, isHidden, isWarCampaign, hasOverrideSort = GetQuestWatchInfo(i);
             -- local questLogIndex = GetQuestLogIndexByID(questID)
     --     for objectiveIndex = 1, numObjectives do
@@ -1079,7 +1095,7 @@ function addon:ModObjectiveTracker()
     --         local text, objectiveType, finished = GetQuestObjectiveInfo(questID, objectiveIndex, false)
     --         print(text, objectiveType, finished)
     --     end
-	-- end
+    -- end
 end
 
 -- MainMenuBar:SetMovable(true)
@@ -1192,7 +1208,7 @@ end
 
 function dumpspell()
     local obj = GetMouseFocus();
-	if (obj and obj ~= WorldFrame) then
+    if (obj and obj ~= WorldFrame) then
         local slot = SpellBook_GetSpellBookSlot(obj)
         local _, id  = GetSpellBookItemInfo(slot,"spell")
         UIParentLoadAddOn("Blizzard_DebugTools");
@@ -1225,7 +1241,7 @@ end
 d87add:RegisterEvent("ADDON_LOADED");
 
 d87add:SetScript("OnEvent", function(self, event, ...)
-	return self[event](self, event, ...)
+    return self[event](self, event, ...)
 end)
 
 function HideHotkeys()
@@ -1357,14 +1373,14 @@ end
 local currResolution = _G.GetCurrentResolution
 local getResolutions = _G.GetScreenResolutions
 local function VisualData()
-	local uiScale, resolutionX, resolutionY = 1, 800, 600
-	local resolutionNow = resolutionNow or {}
-	table.wipe(resolutionNow)
-	resolutionNow = ({getResolutions()})[currResolution()]
-	resolutionX, resolutionY = string.split("x", resolutionNow, 2)
-	resolutionX, resolutionY = tonumber(resolutionX), tonumber(resolutionY)
-	uiScale = 768/resolutionY
-	return uiScale, resolutionX, resolutionY
+    local uiScale, resolutionX, resolutionY = 1, 800, 600
+    local resolutionNow = resolutionNow or {}
+    table.wipe(resolutionNow)
+    resolutionNow = ({getResolutions()})[currResolution()]
+    resolutionX, resolutionY = string.split("x", resolutionNow, 2)
+    resolutionX, resolutionY = tonumber(resolutionX), tonumber(resolutionY)
+    uiScale = 768/resolutionY
+    return uiScale, resolutionX, resolutionY
 end
 
 --- Scales an element to pixel perfection
@@ -1372,8 +1388,8 @@ end
 -- @usage myFrame:SetHeight(myAddOn:PixelPerfect(100))
 -- @usage FontInstance:SetFont("fileName", myAddOn:PixelPerfect(12), "OUTLINE")
 function d87add.PixelPerfect(number)
-	local uiScale = VisualData()
-	return uiScale * number
+    local uiScale = VisualData()
+    return uiScale * number
 end
 
 

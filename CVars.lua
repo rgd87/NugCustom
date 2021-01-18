@@ -82,11 +82,27 @@ local cvars = {
 	nameplateMotion              = "1", -- 1 =  Stacking, 0 = Overlapping
 	-- nameplateOtherBottomInset    = "-1", -- don't stick nameplates to the screen edges for offscreen mobs
 	-- nameplateOtherTopInset       = "-1",
-	nameplateShowAll             = "1", -- always show nameplates, not just in combat, if they're enabled
-	-- nameplateShowEnemyMinions    = "1",
-	nameplateShowEnemyMinus      = "1",
+    nameplateShowAll             = "1", -- always show nameplates, not just in combat, if they're enabled
+
     nameplateShowSelf            = "0",
     nameplateMaxDistance         = "50",
+
+    -- nameplateShowFriends        = "0",
+    nameplateOtherAtBase        = "0", -- 2 = at base
+    nameplateMinAlpha           = "0.6", -- def: 0.6
+
+    nameplateShowOnlyNames      = "0",
+
+    NamePlateVerticalScale      = "1",
+    NamePlateHorizontalScale    = "1",
+    nameplateShowDebuffsOnFriendly = "1",
+
+    nameplateShowEnemyGuardians = "0",
+    nameplateShowEnemyMinions   = "0",
+    nameplateShowEnemyMinus     = "1",
+    nameplateShowEnemyPets      = "1",
+    nameplateShowEnemyTotems    = "1",
+
 
 	-- Unit Frames
 	-- fullSizeFocusFrame   = "1",
