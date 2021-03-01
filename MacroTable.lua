@@ -371,3 +371,92 @@ function EnsureMacros()
         end
     end
 end
+
+
+
+
+
+
+local UniversalMacros = {}
+local function RegisterUniversalMacro(name, pattern, spellTable)
+    local _, class = UnitClass("player")
+    local spellID = spellTable[class]
+    if not spellID then return end
+    local macro = string.format(pattern, GetSpellInfo(spellID))
+
+    UniversalMacros[name] = macro
+end
+
+        -- [47528]  = { cooldown = 15, class = "DEATHKNIGHT" }, --Mind Freeze
+        -- [106839] = { cooldown = 15, class = "DRUID" }, --Skull Bash
+        -- [78675]  = { cooldown = 60, class = "DRUID" }, --Solar Beam
+        -- [183752] = { cooldown = 15, class = "DEMONHUNTER" }, --Disrupt
+        -- [147362] = { cooldown = 24, class = "HUNTER" }, --Counter Shot
+        -- [187707] = { cooldown = 15, class = "HUNTER" }, --Muzzle
+        -- [2139]   = { cooldown = 24, class = "MAGE" }, --Counter Spell
+        -- [116705] = { cooldown = 15, class = "MONK" }, --Spear Hand Strike
+        -- [96231]  = { cooldown = 15, class = "PALADIN" }, --Rebuke
+        -- [15487]  = { cooldown = 45, class = "PRIEST" }, --Silence
+        -- [1766]   = { cooldown = 15, class = "ROGUE" }, --Kick
+        -- [57994] = { cooldown = 12, class = "SHAMAN" }, --Wind Shear
+        -- [6552]  = { cooldown = 15, class = "WARRIOR" }, --Pummel
+        -- [119910] = { cooldown = 24, class = "WARLOCK" }, --Spell Lock
+        -- [19647] = { cooldown = 24, class = "WARLOCK" }, --Spell Lock used from pet bar
+        -- [132409] = { cooldown = 24, class = "WARLOCK" }, --Spell Lock when from sacrificed felhunter
+        -- [212619] = { cooldown = 24, class = "WARLOCK" }, --Call Felhunter, Demonology pvp talent
+        -- [89766] = { cooldown = 30, class = "WARLOCK" }, --Axe Toss (Felguard)
+
+RegisterUniversalMacro("FocusKickUni", "/cast [@focus,exists,nodead][@target] %s", {
+    WARLOCK = 19647, -- pet bar spell lock, missing axe toss
+    DRUID = 78675, -- bash, missing solar beam
+    WARRIOR = 6552, -- pummel
+    SHAMAN = 57994, -- wind shear
+    ROGUE = 1766, -- kick
+    PRIEST = 15487, -- silence
+    PALADIN = 96231, -- rebuke
+    MONK = 116705, -- spear hand strike
+    MAGE = 2139, -- counterspell
+    HUNTER = 147362, -- counter shot, missing muzzle
+    DEMONHUNTER = 183752, -- disrupt
+    DEATHKNIGHT = 47528, -- mind freeze
+})
+
+RegisterUniversalMacro("FocusССUni", "/cast [@focus,exists,nodead][@target] %s", {
+    WARLOCK = 5782, -- Fear
+    DRUID = 33786, -- Cyclone, missing Hybernate, Roots
+    WARRIOR = 107570, -- Storm Bolt
+    SHAMAN = 51514, -- Hex
+    ROGUE = 2094, -- Blind
+    PRIEST = 605, -- Mind Control, missing Physhic Horror
+    PALADIN = 20066, -- Repentance, missing HoJ
+    MONK = 115078, -- Paralysis
+    MAGE = 118, -- Polymorph
+    HUNTER = 187650, -- Freezing Trap, missing Scatter
+    DEMONHUNTER = 217832, -- Imprison, missing their st stun
+    DEATHKNIGHT = 108194, -- Asphyxiate, missing strangulate pvp talent
+})
+
+
+local function UpdateMacro(macroname, newbody)
+    local QUESTIONMARK = "INV_MISC_QUESTIONMARK" -- 134400
+    local index = GetMacroIndexByName(macroname)
+    if index == 0 then
+        index = CreateMacro(macroname, QUESTIONMARK, nil, nil)
+        if not index or index == 0 then return end
+    end
+    EditMacro(index, nil, nil, newbody)
+end
+
+local f = CreateFrame("Frame", nil, UIParent)
+f:RegisterEvent("PLAYER_LOGIN")
+f:SetScript("OnEvent", function(self, event)
+    if not InCombatLockdown() then
+        for name, body in pairs(UniversalMacros) do
+            UpdateMacro(name, body)
+        end
+
+        self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+    else
+        self:RegisterEvent("PLAYER_REGEN_ENABLED")
+    end
+end)

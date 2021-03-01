@@ -27,6 +27,7 @@ function EnsureBindings(...)
             ["Q"] = "ACTIONBUTTON9",
             ["F2"] =        "ACTIONBUTTON10",
             ["BUTTON4"] =   "ACTIONBUTTON11",
+            ["NUMPAD4"] =   "ACTIONBUTTON11", -- Duplicate of BUTTON4
             ["F1"] =        "ACTIONBUTTON12",
 
             ["ALT-1"] = "MULTIACTIONBAR1BUTTON1",
@@ -40,6 +41,7 @@ function EnsureBindings(...)
             ["ALT-Q"] = "MULTIACTIONBAR1BUTTON9",
             ["ALT-F2"] = "MULTIACTIONBAR1BUTTON10",
             ["ALT-BUTTON4"] = "MULTIACTIONBAR1BUTTON11",
+            ["ALT-NUMPAD4"] = "MULTIACTIONBAR1BUTTON11",
             ["ALT-F1"] = "MULTIACTIONBAR1BUTTON12",
 
             --f3 f4, T
@@ -68,6 +70,7 @@ function EnsureBindings(...)
             ["SHIFT-Q"] = "MULTIACTIONBAR3BUTTON9",
             ["SHIFT-F2"] = "MULTIACTIONBAR3BUTTON10",
             ["SHIFT-BUTTON4"] = "MULTIACTIONBAR3BUTTON11",
+            ["SHIFT-NUMPAD4"] = "MULTIACTIONBAR3BUTTON11",
             ["SHIFT-F1"] = "MULTIACTIONBAR3BUTTON12",
 
             ["CTRL-1"] = "MULTIACTIONBAR4BUTTON1",
