@@ -103,7 +103,7 @@ local cvars = {
     nameplateShowEnemyPets      = "1",
     nameplateShowEnemyTotems    = "1",
 
-    nameplateShowFriendlyTotems    = "1",
+    nameplateShowFriendlyTotems    = "0",
 
 
     -- Unit Frames
