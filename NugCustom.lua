@@ -858,6 +858,11 @@ end
 --     MainMenuBarArtFrame.RightEndCap:SetPoint("BOTTOMRIGHT", MainMenuBar, 98, 0);
 -- end)
 
+local function HideDragonflightExpBar()
+    StatusTrackingBarManager:UnregisterAllEvents()
+    StatusTrackingBarManager:Hide()
+end
+
 local playerLoginTime = 0
 
 d87add:RegisterEvent("PLAYER_LOGIN");
@@ -895,6 +900,7 @@ function d87add:PLAYER_LOGIN()
     end
 
 
+    HideDragonflightExpBar()
     addon:DoMain()
     addon:FixCVars()
     if not isClassic then
