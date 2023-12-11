@@ -87,7 +87,7 @@ local cvars = {
     nameplateShowSelf            = "0",
     nameplateMaxDistance         = "50",
 
-    -- nameplateShowFriends        = "0",
+    nameplateShowFriends        = "0",
     nameplateOtherAtBase        = "0", -- 2 = at base
     nameplateMinAlpha           = "0.6", -- def: 0.6
 
@@ -170,7 +170,7 @@ local isClassic = select(4,GetBuildInfo()) <= 19999
 if isClassic then
     cvars.displaySpellActivationOverlays = nil
     cvars.spellActivationOverlayOpacity = nil
-    cvars.threatShowNumeric = nil
+    -- cvars.threatShowNumeric = nil
     cvars.nameplateShowSelf = nil
 end
 

@@ -871,6 +871,29 @@ function d87add:PLAYER_LOGIN()
     --     print(GetTime(), "|cffffaaaaCOMBAT_LOG_HEALTH|r", CLH.UnitHealth("player"))
     -- end)
 
+    if isClassic then
+        local FindMinerals = 2580
+        local FindHerbs = 2383
+        local selectedTracking
+        if IsPlayerSpell(FindMinerals) then
+            selectedTracking = FindMinerals
+        elseif IsPlayerSpell(FindHerbs) then
+            selectedTracking = FindHerbs
+        end
+
+        local f = CreateFrame("Frame", nil, UIParent)
+
+        if selectedTracking then
+            f:RegisterEvent("PLAYER_STARTED_MOVING")
+            f:SetScript("OnEvent", function()
+                if GetTrackingTexture() == nil
+                then
+                    CastSpellByID(selectedTracking)
+                end
+            end)
+        end
+    end
+
 
     addon:DoMain()
     addon:FixCVars()

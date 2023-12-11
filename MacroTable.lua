@@ -1,8 +1,8 @@
 local addonName, addon = ...
 
 
-local isClassic = select(4,GetBuildInfo()) <= 19999
-if isClassic then return end
+-- local isClassic = select(4,GetBuildInfo()) <= 19999
+-- if isClassic then return end
 
 local macroTable = {}
 addon.macroTable = macroTable
