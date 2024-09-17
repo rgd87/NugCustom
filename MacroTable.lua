@@ -1,6 +1,21 @@
 local addonName, addon = ...
 
 
+if C_Spell.GetSpellInfo then
+    local C_Spell_GetSpellInfo = C_Spell.GetSpellInfo
+    addon.GetSpellInfo = function(spellId)
+        local info = C_Spell_GetSpellInfo(spellId)
+        if info then
+            return info.name, nil, info.iconID
+        end
+    end
+    -- helpers.GetSpellTexture = C_Spell.GetSpellTexture
+else
+    addon.GetSpellInfo = _G.GetSpellInfo
+    -- helpers.GetSpellTexture = _G.GetSpellTexture
+end
+local GetSpellInfo = addon.GetSpellInfo
+
 -- local isClassic = select(4,GetBuildInfo()) <= 19999
 -- if isClassic then return end
 

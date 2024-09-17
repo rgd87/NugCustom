@@ -12,7 +12,11 @@ LSM:Register("font", "ClearFontBold", [[Interface\AddOns\NugCustom\ClearFontBold
 
 LSM:Register("sound", "Heartbeat5", "Interface/AddOns/NugCustom/heartbeat_mp3.ogg")
 
-LoadAddOn("Blizzard_DebugTools")
+
+local GetSpellInfo = addon.GetSpellInfo
+
+
+C_AddOns.LoadAddOn("Blizzard_DebugTools")
 
 -- LSM:Register("font", "Roboto-Medium", [[Interface\AddOns\NugCustom\Roboto-Medium.ttf]],  GetLocale() ~= "enUS" and 15)
 -- LSM:Register("font", "Roboto-Regular", [[Interface\AddOns\NugCustom\Roboto-Regular.ttf]],  GetLocale() ~= "enUS" and 15)
