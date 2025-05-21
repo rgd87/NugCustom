@@ -189,6 +189,7 @@ function addon:FixCVars()
             SetCVar(cvar, value)
         end
     end
+    UIParent:SetScale(cvars.uiScale)
 
     -- hooksecurefunc("SetCVar", function(k, v)
     --     local o = cvars[k]

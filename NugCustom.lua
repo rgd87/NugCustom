@@ -3,6 +3,7 @@ local addonName, addon = ...
 local d87add = CreateFrame("Frame", "d87add")
 
 local isClassic = select(4,GetBuildInfo()) <= 19999
+local isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
@@ -904,7 +905,9 @@ function d87add:PLAYER_LOGIN()
     end
 
 
-    HideDragonflightExpBar()
+    if isMainline then
+        HideDragonflightExpBar()
+    end
     addon:DoMain()
     addon:FixCVars()
     if not isClassic then
